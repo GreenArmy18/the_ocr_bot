@@ -29,6 +29,7 @@ def button_click(update:Update,context:CallbackContext):
             total_hours_end, total_minutes_end, hours,minutes=calculate(message.splitlines())
             #query.edit_message_text(f"{message}")
             #query.edit_message_text(f"{message}")
+            tommorw_date=next_thursday.strftime("%d/%m/%y")
             context.bot.send_message(chat_id=update.message.chat_id, text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
 
         else:
