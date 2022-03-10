@@ -33,6 +33,10 @@ def button_click(update:Update,context:CallbackContext):
 
 
 def calculate(data_list):
+    t1=timedelta(hours=1, milliseconds=0)
+    t2=timedelta(hours=1, milliseconds=0)
+    total_time=t1-t2
+
     hours=[]
 
     for x in range(1,5):
