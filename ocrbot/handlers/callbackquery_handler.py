@@ -25,12 +25,21 @@ def button_click(update:Update,context:CallbackContext):
         if data['IsErroredOnProcessing']==False:
             message=data['ParsedResults'][0]['ParsedText']
             print(calculate(message.splitlines()))
+            
             query.edit_message_text(f"{message}")
         else:
             query.edit_message_text(text="⚠️Something went wrong, please try again later ⚠️")
     else:
         query.edit_message_text("Something went wrong, Send this image again")
 
+def next_weekday(d, weekday):
+    days_ahead = weekday - d.weekday()
+    if days_ahead <= 0: # Target day already happened this week
+        days_ahead += 7
+    return d + timedelta(days_ahead)
+
+d = date.today() + timedelta(days=1)
+next_thursday = next_weekday(d, 3) # 0 = Monday, 1=Tuesday, 2=Wednesday...
 
 def calculate(data_list):
     t1=timedelta(hours=1, milliseconds=0)
@@ -54,10 +63,8 @@ def calculate(data_list):
         second_time=re.sub('[^0-9]', '', str(hours[x+x-1]))
 
         time1 = datetime.strptime(first_time,"%H%M") # convert string to time
-        #print(time1)
 
         time2 = datetime.strptime(second_time,"%H%M")
-        #print(time2)
         diff = time1 - time2
         total_time+=(diff)
 
@@ -65,28 +72,24 @@ def calculate(data_list):
     test = '%02d:%02d:%02d.%06d' % (test.days*24 + test.seconds // 3600, (test.seconds % 3600) // 60, test.seconds % 60, test.microseconds)
     print(test)
 
-    #print(total_time-timedelta(hours=0, microseconds=0), "total time")
     total_hours_end=(str(test)[:-3].split(":"))[0]
-    #print(total_hours_end)
-    #print(((total_time)[:-3].split(":")).hour)
     total_minutes_end=(str(test)[:-3].split(":"))[1]
     if total_minutes_end[0]=='0': total_minutes_end=total_minutes_end[1]
     total=timedelta(hours=29, microseconds=0)-total_time
-    #print(total, "total")
 
     total_hours=(str(total)[:-3].split(":"))[0]
     total_minutes=(str(total)[:-3].split(":"))[1]
     
-    #print(total_hours, "hours")
-    #print(total_minutes, "minutes")
     if total_minutes[:-1]=='0':
         total_minutes=total_minutes[1:]
 
-    main_title="שבוע טוב, אימא\nמחר, יום חמישי, תצטרכי לעבוד"
-    hours_title="שעות"
-    link_mark="ו־"
-    minutes_title="דקות."
-    end_title="\nשיהיה לך המשך שבוע נפלא :)"
-    #print(main_title, total_hours, hours_title, link_mark, total_minutes, minutes_title, end_title)
+    #total_hours_end, total_minutes_end, hours,minutes = somefunction(f.read())
+    #total_hours_end = '%02d:%02d:%02d.%06d' % (total_hours_end.days*24 + total_hours_end.seconds // 3600, (total_hours_end.seconds % 3600) // 60, total_hours_end.seconds % 60, total_hours_end.microseconds)
+
+    print(total_hours_end, total_minutes_end)
+    #tommorw_date=(date.today() + timedelta(days=1)).strftime("%d/%m/%y")
+    tommorw_date=next_thursday.strftime("%d/%m/%y")
+    #context.bot.send_message(chat_id=update.message.chat_id, text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
+    print('שבוע טוב, אימא\n''השבוע עבדת ',total_hours_end,' שעות ו־',total_minutes_end,' דקות.\n''ביום חמישי הקרוב – ',tommorw_date,', תצטרכי לעבוד ' ,hours, ' שעות ו־' ,minutes, ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
     print(total_hours_end, total_minutes_end, total_hours, total_minutes)
     return total_hours_end, total_minutes_end, total_hours, total_minutes
