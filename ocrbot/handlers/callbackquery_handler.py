@@ -5,6 +5,7 @@ from telegram.ext import CallbackContext
 from ocrbot.helpers.mock_database import get_file_path
 from ocrbot.config import API_KEY
 from datetime import timedelta, date
+import re
 
 
 
@@ -41,7 +42,7 @@ def calculate(data_list):
 
         for i in range (2):
             hours.append((str1[pos_flags[i]-2:pos_flags[i]+3]).split(" "))
-
+    print(hours)
     from datetime import datetime
 
     for x in range(1,5):
