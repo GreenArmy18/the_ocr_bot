@@ -38,7 +38,7 @@ def button_click(update:Update,context:CallbackContext):
             #query.edit_message_text(f"{message}")
             #query.edit_message_text(f"{message}")
             tommorw_date=next_thursday.strftime("%d/%m/%y")
-            context.bot.send_message(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
+            query.edit_message_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
 
         else:
             query.edit_message_text(text="⚠️Something went wrong, please try again later ⚠️")
