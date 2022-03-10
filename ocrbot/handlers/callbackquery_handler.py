@@ -9,6 +9,14 @@ from datetime import timedelta, date
 import re
 
 
+def next_weekday(d, weekday):
+    days_ahead = weekday - d.weekday()
+    if days_ahead <= 0: # Target day already happened this week
+        days_ahead += 7
+    return d + timedelta(days_ahead)
+
+d = date.today() + timedelta(days=1)
+next_thursday = next_weekday(d, 3) # 0 = Monday, 1=Tuesday, 2=Wednesday...
 
 @send_typing_action
 def button_click(update:Update,context:CallbackContext):
@@ -30,21 +38,13 @@ def button_click(update:Update,context:CallbackContext):
             #query.edit_message_text(f"{message}")
             #query.edit_message_text(f"{message}")
             tommorw_date=next_thursday.strftime("%d/%m/%y")
-            context.bot.send_message(chat_id=update.message.chat_id, text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
+            context.bot.send_message(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
 
         else:
             query.edit_message_text(text="⚠️Something went wrong, please try again later ⚠️")
     else:
         query.edit_message_text("Something went wrong, Send this image again")
 
-def next_weekday(d, weekday):
-    days_ahead = weekday - d.weekday()
-    if days_ahead <= 0: # Target day already happened this week
-        days_ahead += 7
-    return d + timedelta(days_ahead)
-
-d = date.today() + timedelta(days=1)
-next_thursday = next_weekday(d, 3) # 0 = Monday, 1=Tuesday, 2=Wednesday...
 
 def calculate(data_list):
     t1=timedelta(hours=1, milliseconds=0)
