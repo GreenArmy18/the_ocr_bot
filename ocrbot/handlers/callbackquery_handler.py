@@ -27,7 +27,8 @@ def button_click(update:Update,context:CallbackContext):
             message=data['ParsedResults'][0]['ParsedText']
             print(calculate(message.splitlines()),"final result")
             message=calculate(message.splitlines())
-            query.edit_message_text(f"{message}")
+            #query.edit_message_text(f"{message}")
+            query.edit_message_text(message)
         else:
             query.edit_message_text(text="⚠️Something went wrong, please try again later ⚠️")
     else:
