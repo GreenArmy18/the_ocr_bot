@@ -26,7 +26,7 @@ def button_click(update:Update,context:CallbackContext):
         if data['IsErroredOnProcessing']==False:
             message=data['ParsedResults'][0]['ParsedText']
             print(calculate(message.splitlines()),"final result")
-            
+            message=calculate(message.splitlines())
             query.edit_message_text(f"{message}")
         else:
             query.edit_message_text(text="⚠️Something went wrong, please try again later ⚠️")
@@ -91,8 +91,8 @@ def calculate(data_list):
     #tommorw_date=(date.today() + timedelta(days=1)).strftime("%d/%m/%y")
     tommorw_date=next_thursday.strftime("%d/%m/%y")
     #context.bot.send_message(chat_id=update.message.chat_id, text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
-    print('שבוע טוב, אימא\n''השבוע עבדת ',total_hours_end,' שעות ו־',total_minutes_end,' דקות.\n''ביום חמישי הקרוב – ',tommorw_date,', תצטרכי לעבוד ' ,hours, ' שעות ו',total_minutes,'־דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
-    text='שבוע טוב, אימא\n''השבוע עבדת ',total_hours_end,' שעות ו־',total_minutes_end,' דקות.\n''ביום חמישי הקרוב – ',tommorw_date,', תצטרכי לעבוד ' ,hours, ' שעות ו',total_minutes,'־דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)'
+    print('שבוע טוב, אימא\n''השבוע עבדת ',total_hours_end,' שעות ו־',total_minutes_end,' דקות.\n''ביום חמישי הקרוב – ',tommorw_date,', תצטרכי לעבוד ' ,total_hours, ' שעות ו',total_minutes,'־דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
+    text='שבוע טוב, אימא\n''השבוע עבדת ',total_hours_end,' שעות ו־',total_minutes_end,' דקות.\n''ביום חמישי הקרוב – ',tommorw_date,', תצטרכי לעבוד ' ,total_hours, ' שעות ו',total_minutes,'־דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)'
     #'שבוע טוב, אימא\n''השבוע עבדת ',total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +total_hours+ ' שעות ו־' +total_minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)'
     print(total_hours_end, total_minutes_end, total_hours, total_minutes,"my numbers")
     #return total_hours_end, total_minutes_end, total_hours, total_minutes
