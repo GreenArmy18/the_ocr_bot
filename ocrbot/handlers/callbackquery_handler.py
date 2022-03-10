@@ -24,7 +24,7 @@ def button_click(update:Update,context:CallbackContext):
         
         if data['IsErroredOnProcessing']==False:
             message=data['ParsedResults'][0]['ParsedText']
-            print(calculate(message.splitlines()))
+            print(calculate(message.splitlines()),"final result")
             
             query.edit_message_text(f"{message}")
         else:
@@ -55,7 +55,7 @@ def calculate(data_list):
 
         for i in range (2):
             hours.append((str1[pos_flags[i]-2:pos_flags[i]+3]).split(" "))
-    print(hours)
+    print(hours,"hours")
     from datetime import datetime
 
     for x in range(1,5):
@@ -70,7 +70,7 @@ def calculate(data_list):
 
     test=total_time
     test = '%02d:%02d:%02d.%06d' % (test.days*24 + test.seconds // 3600, (test.seconds % 3600) // 60, test.seconds % 60, test.microseconds)
-    print(test)
+    print(test,"test")
 
     total_hours_end=(str(test)[:-3].split(":"))[0]
     total_minutes_end=(str(test)[:-3].split(":"))[1]
@@ -91,5 +91,5 @@ def calculate(data_list):
     tommorw_date=next_thursday.strftime("%d/%m/%y")
     #context.bot.send_message(chat_id=update.message.chat_id, text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
     print('שבוע טוב, אימא\n''השבוע עבדת ',total_hours_end,' שעות ו־',total_minutes_end,' דקות.\n''ביום חמישי הקרוב – ',tommorw_date,', תצטרכי לעבוד ' ,hours, ' שעות ו־דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
-    print(total_hours_end, total_minutes_end, total_hours, total_minutes)
+    print(total_hours_end, total_minutes_end, total_hours, total_minutes,"my numbers")
     return total_hours_end, total_minutes_end, total_hours, total_minutes
