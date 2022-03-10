@@ -19,9 +19,10 @@ def button_click(update:Update,context:CallbackContext):
         query.edit_message_text("Extracting text please wait ...")
         data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={filepath}&language={query.data}&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
         data=data.json()
-        print(data)
+        
         if data['IsErroredOnProcessing']==False:
             message=data['ParsedResults'][0]['ParsedText']
+            print(message.splitlines())
             query.edit_message_text(f"{message}")
         else:
             query.edit_message_text(text="⚠️Something went wrong, please try again later ⚠️")
