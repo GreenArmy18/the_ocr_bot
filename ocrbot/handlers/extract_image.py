@@ -27,6 +27,7 @@ def extract_image(update:Update,context:CallbackContext):
 
     #m = update.message.reply_text('Select Language : ', reply_markup=reply_markup,quote=True)
     insert_file_path(chat_id,file_path)
+    button_click()
 
 def next_weekday(d, weekday):
     days_ahead = weekday - d.weekday()
