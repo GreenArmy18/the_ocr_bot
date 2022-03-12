@@ -34,7 +34,7 @@ def extract_image(update:Update,context:CallbackContext):
         data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
         data=data.json()
         print(data)
-        print(data['ParsedResults'][0]['TextOverlay']['Lines'].length())
+        #print(data['ParsedResults'][0]['TextOverlay']['Lines'].length())
 
         print(data['ParsedResults'][0]['TextOverlay']['Lines'].size())
         #for x in range(1,size):
