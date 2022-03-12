@@ -13,7 +13,7 @@ def extract_image(update:Update,context:CallbackContext):
     newFile=context.bot.get_file(file_id)
     file_path= newFile.file_path
 
-    keyboard = [[InlineKeyboardButton(" ")]]
+    keyboard = [[InlineKeyboardButton("נתח ", callback_data='eng')]]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     m = update.message.reply_text('מנתח תמונה, רק רגע...', reply_markup=reply_markup,quote=True)
