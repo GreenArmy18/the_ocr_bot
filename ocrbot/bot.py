@@ -4,7 +4,6 @@ from .config import BOT_TOKEN
 from .commands.start import start
 from .commands.help import help
 from .commands.invalid_command import invalid_command
-from .handlers.callbackquery_handler import button_click
 from .handlers.extract_image import extract_image
 
 
@@ -23,8 +22,7 @@ def main():
     dp.add_handler(CommandHandler('help',help,run_async=True))
     dp.add_handler(MessageHandler(Filters.photo, extract_image,run_async=True))
     dp.add_handler(MessageHandler(Filters.command,invalid_command,run_async=True))
-    #dp.add_handler(CallbackQueryHandler(button_click,run_async=True))
-    #updater.bot.edit_message_text
+
     updater.start_polling(drop_pending_updates=True)
     print("Bot is running")
     updater.idle()

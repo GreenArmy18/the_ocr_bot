@@ -1,6 +1,5 @@
 from ocrbot.helpers.decorators import send_typing_action
-from ocrbot.helpers.mock_database import insert_file_path
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import Update
 from telegram.ext import CallbackContext
 from ocrbot.config import API_KEY
 from datetime import timedelta, date
@@ -13,9 +12,6 @@ def next_weekday(d, weekday):
         days_ahead += 7
     return d + timedelta(days_ahead)
 
-d = date.today() + timedelta(days=1)
-next_thursday = next_weekday(d, 3) # 0 = Monday, 1=Tuesday, 2=Wednesday...
-tommorw_date=next_thursday.strftime("%d/%m/%y")
 
 @send_typing_action
 def extract_image(update:Update,context:CallbackContext):
@@ -26,14 +22,14 @@ def extract_image(update:Update,context:CallbackContext):
     file_id = update.message.photo[-1].file_id
     newFile=context.bot.get_file(file_id)
     file_path= newFile.file_path
-    print(file_path, "file_path")
 
     m = update.message.reply_text('מנתח תמונה, רק רגע...',quote=True)
-    #m.edit_text(text ="ניסיון")
+    
+    d = date.today() + timedelta(days=1)
+    next_thursday = next_weekday(d, 3) # 0 = Monday, 1=Tuesday, 2=Wednesday...
+    tommorw_date=next_thursday.strftime("%d/%m/%y")
 
     if file_path is not None:
-        #query.edit_message_text("Extracting text please wait ...")
-        #m.edit_text("מנתח תמונה, רק רגע...")
         data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
         data=data.json()
         
