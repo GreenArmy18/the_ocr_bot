@@ -35,7 +35,7 @@ def extract_image(update:Update,context:CallbackContext):
     #filepath=get_file_path(query.message.chat_id,query.message.message_id)
     if file_path is not None:
         #query.edit_message_text("Extracting text please wait ...")
-        update.edit_message_text("מנתח תמונה, רק רגע...")
+        context.bot.send_message(chat_id=update.message.chat_id,text="מנתח תמונה, רק רגע...")
         data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
         data=data.json()
         
