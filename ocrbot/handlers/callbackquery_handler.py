@@ -30,9 +30,9 @@ def button_click(update:Update,context:CallbackContext):
     if filepath is not None:
         #query.edit_message_text("Extracting text please wait ...")
         query.edit_message_text("מנתח תמונה, רק רגע...")
-        data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={filepath}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
+        #data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={filepath}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
         data=data.json()
-        
+        print(data, "data")
         if data['IsErroredOnProcessing']==False:
             message=data['ParsedResults'][0]['ParsedText']
             total_hours_end, total_minutes_end, hours,minutes=calculate(message.splitlines())
