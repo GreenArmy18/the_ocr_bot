@@ -2,6 +2,7 @@ from ocrbot.helpers.decorators import send_typing_action
 from ocrbot.helpers.mock_database import insert_file_path
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
+import requests
 
 @send_typing_action
 def extract_image(update:Update,context:CallbackContext):
@@ -22,3 +23,6 @@ def extract_image(update:Update,context:CallbackContext):
 
     m = update.message.reply_text('Select Language : ', reply_markup=reply_markup,quote=True)
     insert_file_path(chat_id,m.message_id,file_path)
+    data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={filepath}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
+    data=data.json()
+    print(data)
