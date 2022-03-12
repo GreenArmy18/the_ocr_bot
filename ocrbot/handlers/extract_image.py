@@ -26,6 +26,7 @@ def extract_image(update:Update,context:CallbackContext):
     file_id = update.message.photo[-1].file_id
     newFile=context.bot.get_file(file_id)
     file_path= newFile.file_path
+    print(file_path, "file_path")
 
     m = update.message.reply_text('מנתח תמונה, רק רגע...',quote=True)
     #m.edit_text(text ="ניסיון")
