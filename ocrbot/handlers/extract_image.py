@@ -36,8 +36,8 @@ def extract_image(update:Update,context:CallbackContext):
         print(data)
         size=len(data['ParsedResults'][0]['TextOverlay']['Lines'])
         for x in range(size):
-            if data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['WordText']==today:
-                print (data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['Left'])
+            #if data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['WordText']==today:
+            print (data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['Left'])
 
         if data['IsErroredOnProcessing']==False:
             message=data['ParsedResults'][0]['ParsedText']
