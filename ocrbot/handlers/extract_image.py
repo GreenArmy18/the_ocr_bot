@@ -16,5 +16,8 @@ def extract_image(update:Update,context:CallbackContext):
     keyboard = [[InlineKeyboardButton("נתח ", callback_data='eng')]]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    m = update.message.reply_text('מנתח תמונה, רק רגע...',quote=True)
+    m = update.message.reply_text('מנתח תמונה, רק רגע...', reply_markup=reply_markup,quote=True)
     insert_file_path(chat_id,m.message_id,file_path)
+    query = update.callback_query
+    query.answer()
+    print(query)
