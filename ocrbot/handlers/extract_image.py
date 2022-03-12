@@ -32,7 +32,7 @@ def extract_image(update:Update,context:CallbackContext):
 
     if file_path is not None:
         #query.edit_message_text("Extracting text please wait ...")
-        m.edit_text("מנתח תמונה, רק רגע...")
+        #m.edit_text("מנתח תמונה, רק רגע...")
         data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
         data=data.json()
         
