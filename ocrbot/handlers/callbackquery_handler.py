@@ -1,3 +1,4 @@
+from cgitb import text
 import requests
 from ocrbot.helpers.decorators import send_typing_action
 from telegram import Update
@@ -24,17 +25,15 @@ def button_click(update:Update,context:CallbackContext):
     This function is called when the user clicks on the buttons.
     '''
     query = update.callback_query
-    print(query,"query")
     query.answer()
-    print(query.answer(),"answer")
     filepath=get_file_path(query.message.chat_id,query.message.message_id)
-    print(filepath,"button")
+    
     if filepath is not None:
         #query.edit_message_text("Extracting text please wait ...")
         query.edit_message_text("מנתח תמונה, רק רגע...")
         data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={filepath}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
         data=data.json()
-        #print(data, "data")
+        
         if data['IsErroredOnProcessing']==False:
             message=data['ParsedResults'][0]['ParsedText']
             total_hours_end, total_minutes_end, hours,minutes=calculate(message.splitlines())
