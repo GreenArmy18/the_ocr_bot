@@ -1,5 +1,5 @@
-from ocrbot.helpers.decorators import send_typing_action
-from ocrbot.helpers.mock_database import insert_file_path
+#from ocrbot.helpers.decorators import send_typing_action
+#from ocrbot.helpers.mock_database import insert_file_path
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackContext
 from ocrbot.config import API_KEY
@@ -17,7 +17,7 @@ def extract_image(update:Update,context:CallbackContext):
     newFile=context.bot.get_file(file_id)
     file_path= newFile.file_path
     button_click(update, context, file_path)
-    
+
 def next_weekday(d, weekday):
     days_ahead = weekday - d.weekday()
     if days_ahead <= 0: # Target day already happened this week
