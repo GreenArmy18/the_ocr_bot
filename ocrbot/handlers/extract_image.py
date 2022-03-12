@@ -20,11 +20,13 @@ def extract_image(update:Update,context:CallbackContext):
     '''
     chat_id=update.effective_chat.id
     file_id = update.message.photo[-1].file_id
+    print(file_id,'file_id')
     newFile=context.bot.get_file(file_id)
+    print(newFile,'newFile')
     file_path= newFile.file_path
-
+    print(file_path,'file_path')
     m = update.message.reply_text('מנתח תמונה, רק רגע...',quote=True)
-
+    
     d = date.today() + timedelta(days=1)
     today=date.today()
     next_thursday = next_weekday(d, 3) # 0 = Monday, 1=Tuesday, 2=Wednesday...
