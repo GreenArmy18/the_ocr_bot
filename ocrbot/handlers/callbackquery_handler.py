@@ -24,7 +24,9 @@ def button_click(update:Update,context:CallbackContext):
     This function is called when the user clicks on the buttons.
     '''
     query = update.callback_query
+    print(query,"query")
     query.answer()
+    print(query.answer(),"answer")
     filepath=get_file_path(query.message.chat_id,query.message.message_id)
     print(filepath,"button")
     if filepath is not None:

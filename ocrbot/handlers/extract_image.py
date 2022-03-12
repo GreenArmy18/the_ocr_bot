@@ -14,6 +14,11 @@ def extract_image(update:Update,context:CallbackContext):
     file_id = update.message.photo[-1].file_id
     newFile=context.bot.get_file(file_id)
     file_path= newFile.file_path
+    query = update.callback_query
+    print(query,"query2")
+    query.answer()
+    print(query.answer(),"answer2")
+
     data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
     print(data, "data")
     data=data.json()
