@@ -1,4 +1,3 @@
-from cgitb import text
 import requests
 from ocrbot.helpers.decorators import send_typing_action
 from telegram import Update
