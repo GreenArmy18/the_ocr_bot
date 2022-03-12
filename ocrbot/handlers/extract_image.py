@@ -30,24 +30,24 @@ def extract_image(update:Update,context:CallbackContext):
     '''
     This function is called when the user clicks on the buttons.
     '''
-    query = update.callback_query
-    query.answer()
+    #query = update.callback_query
+    #query.answer()
     #filepath=get_file_path(query.message.chat_id,query.message.message_id)
     if file_path is not None:
         #query.edit_message_text("Extracting text please wait ...")
-        query.edit_message_text("מנתח תמונה, רק רגע...")
+        update.edit_message_text("מנתח תמונה, רק רגע...")
         data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
         data=data.json()
         
         if data['IsErroredOnProcessing']==False:
             message=data['ParsedResults'][0]['ParsedText']
             total_hours_end, total_minutes_end, hours,minutes=calculate(message.splitlines())
-            query.edit_message_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
+            update.edit_message_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
 
         else:
-            query.edit_message_text(text="⚠️Something went wrong, please try again later ⚠️")
+            update.edit_message_text(text="⚠️Something went wrong, please try again later ⚠️")
     else:
-        query.edit_message_text("Something went wrong, Send this image again")
+        update.edit_message_text("Something went wrong, Send this image again")
 
 
 def calculate(data_list):
