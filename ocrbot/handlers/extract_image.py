@@ -13,5 +13,5 @@ def extract_image(update:Update,context:CallbackContext):
     newFile=context.bot.get_file(file_id)
     file_path= newFile.file_path
 
-    m = update.message.reply_text("מנתח תמונה, רק רגע...")
+    m = update.message.reply_text("מנתח תמונה, רק רגע...", quote=True)
     insert_file_path(chat_id,m.message_id,file_path)
