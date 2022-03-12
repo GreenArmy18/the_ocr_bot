@@ -42,12 +42,12 @@ def extract_image(update:Update,context:CallbackContext):
         if data['IsErroredOnProcessing']==False:
             message=data['ParsedResults'][0]['ParsedText']
             total_hours_end, total_minutes_end, hours,minutes=calculate(message.splitlines())
-            update.edit_message_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
+            context.bot.send_message(chat_id=update.message.chat_id,text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
 
         else:
-            update.edit_message_text(text="⚠️Something went wrong, please try again later ⚠️")
+            context.bot.send_message(chat_id=update.message.chat_id,text="⚠️Something went wrong, please try again later ⚠️")
     else:
-        update.edit_message_text("Something went wrong, Send this image again")
+        context.bot.send_message(chat_id=update.message.chat_id,text="Something went wrong, Send this image again")
 
 
 def calculate(data_list):
