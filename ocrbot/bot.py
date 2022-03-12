@@ -21,9 +21,9 @@ def main():
     dp=updater.dispatcher
     dp.add_handler(CommandHandler('start',start,run_async=True))
     dp.add_handler(CommandHandler('help',help,run_async=True))
-    dp.add_handler(MessageHandler(Filters.photo, extract_image,run_async=True))
+    dp.add_handler((MessageHandler(Filters.photo, extract_image,run_async=True),CallbackQueryHandler(button_click,run_async=True)))
     dp.add_handler(MessageHandler(Filters.command,invalid_command,run_async=True))
-    dp.add_handler(CallbackQueryHandler(button_click,run_async=True))
+    #dp.add_handler()
 
     updater.start_polling(drop_pending_updates=True)
     print("Bot is running")
