@@ -7,17 +7,6 @@ from datetime import timedelta, date
 import re
 import requests
 
-#@send_typing_action
-def extract_image(update:Update,context:CallbackContext):
-    '''
-    This function is called when the user sends a photo.
-    '''
-    chat_id=update.effective_chat.id
-    file_id = update.message.photo[-1].file_id
-    newFile=context.bot.get_file(file_id)
-    file_path= newFile.file_path
-    button_click(update, context, file_path)
-
 def next_weekday(d, weekday):
     days_ahead = weekday - d.weekday()
     if days_ahead <= 0: # Target day already happened this week
@@ -29,17 +18,25 @@ next_thursday = next_weekday(d, 3) # 0 = Monday, 1=Tuesday, 2=Wednesday...
 tommorw_date=next_thursday.strftime("%d/%m/%y")
 
 #@send_typing_action
-def button_click(update:Update,context:CallbackContext, filepath):
+def extract_image(update:Update,context:CallbackContext):
+    '''
+    This function is called when the user sends a photo.
+    '''
+    chat_id=update.effective_chat.id
+    file_id = update.message.photo[-1].file_id
+    newFile=context.bot.get_file(file_id)
+    file_path= newFile.file_path
+
     '''
     This function is called when the user clicks on the buttons.
     '''
     query = update.callback_query
     query.answer()
     #filepath=get_file_path(query.message.chat_id,query.message.message_id)
-    if filepath is not None:
+    if file_path is not None:
         #query.edit_message_text("Extracting text please wait ...")
         query.edit_message_text("מנתח תמונה, רק רגע...")
-        data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={filepath}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
+        data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
         data=data.json()
         
         if data['IsErroredOnProcessing']==False:
