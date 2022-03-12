@@ -23,7 +23,7 @@ def main():
     dp.add_handler(CommandHandler('help',help,run_async=True))
     dp.add_handler(MessageHandler(Filters.photo, extract_image,run_async=True))
     dp.add_handler(MessageHandler(Filters.command,invalid_command,run_async=True))
-    dp.add_handler(MessageHandler(button_click,run_async=True))
+    dp.add_handler(MessageHandler(Filters.all ,button_click))
 
     updater.start_polling(drop_pending_updates=True)
     print("Bot is running")

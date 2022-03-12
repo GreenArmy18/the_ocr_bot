@@ -8,7 +8,7 @@ from ocrbot.helpers.mock_database import get_file_path
 import requests
 from ocrbot.config import API_KEY
 
-@send_typing_action
+#@send_typing_action
 def extract_image(update:Update,context:CallbackContext):
     '''
     This function is called when the user sends a photo.
@@ -38,7 +38,7 @@ d = date.today() + timedelta(days=1)
 next_thursday = next_weekday(d, 3) # 0 = Monday, 1=Tuesday, 2=Wednesday...
 tommorw_date=next_thursday.strftime("%d/%m/%y")
 
-@send_typing_action
+#@send_typing_action
 def button_click(update:Update,context:CallbackContext):
     '''
     This function is called when the user clicks on the buttons.
