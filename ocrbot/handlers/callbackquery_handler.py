@@ -26,7 +26,7 @@ def button_click(update:Update,context:CallbackContext):
     '''
     query = update.callback_query
     query.answer()
-    filepath=get_file_path(query.message.chat_id,query.message.message_id)
+    filepath=get_file_path(query.message.chat_id)
     if filepath is not None:
         #query.edit_message_text("Extracting text please wait ...")
         query.edit_message_text("מנתח תמונה, רק רגע...")
