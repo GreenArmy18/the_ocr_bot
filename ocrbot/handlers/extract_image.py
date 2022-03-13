@@ -5,6 +5,11 @@ from ocrbot.config import API_KEY
 from datetime import timedelta, date
 import re
 import requests
+from PIL import Image
+import cv2
+from matplotlib import cm
+import numpy as np
+import urllib
 
 def next_weekday(d, weekday):
     days_ahead = weekday - d.weekday()
@@ -31,18 +36,56 @@ def extract_image(update:Update,context:CallbackContext):
     today=date.today()
     next_thursday = next_weekday(d, 3) # 0 = Monday, 1=Tuesday, 2=Wednesday...
     tommorw_date=next_thursday.strftime("%d/%m/%y")
+    
     position=0
+
     if file_path is not None:
         data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
         data=data.json()
         print(data, "data")
-
+        
         if data['IsErroredOnProcessing']==False:
             size=len(data['ParsedResults'][0]['TextOverlay']['Lines'])
             for x in range(size):
             #if data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['WordText']==today:
             #if data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['WordText']==30:
-                print (data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['Left'], data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['Top'])
+                l,t= data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['Left'], data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['Top']
+            
+            #l=391
+            l+=45
+            l-=300
+
+            #t=1104
+            t+=40
+            t-=255
+
+            left=l
+            top=t
+            height=300
+            weight=245
+
+            x=left
+            y=top
+            h=weight
+            w=height
+            
+            req = urllib.urlopen(file_path)
+            arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
+            img = cv2.imdecode(arr, -1) # 'Load it as it is'
+
+            #cv2.imshow('lalala', img)
+            #if cv2.waitKey() & 0xff == 27: quit()
+
+            crop_img = img[y:y+h, x:x+w]
+
+            PIL_image = Image.fromarray(crop_img.astype('uint8'), 'RGB')
+
+            from io import BytesIO
+            bio = BytesIO()
+            bio.name = 'image.jpeg'
+            PIL_image.save(bio, 'JPEG')
+            bio.seek(0)
+            m.edit_media(chat_id, photo=bio)
 
             message=data['ParsedResults'][0]['ParsedText']
             total_hours_end, total_minutes_end, hours,minutes=calculate(message.splitlines())
