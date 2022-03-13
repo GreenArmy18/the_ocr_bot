@@ -6,10 +6,10 @@ from datetime import timedelta, date
 import re
 import requests
 from PIL import Image
-import cv2
+#import cv2
 #from matplotlib import cm
 import numpy as np
-import urllib
+#import urllib
 
 def next_weekday(d, weekday):
     days_ahead = weekday - d.weekday()
