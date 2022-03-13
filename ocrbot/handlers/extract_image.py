@@ -7,7 +7,7 @@ import re
 import requests
 from PIL import Image
 import cv2
-from matplotlib import cm
+#from matplotlib import cm
 import numpy as np
 import urllib
 
