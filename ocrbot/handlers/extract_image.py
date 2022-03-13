@@ -10,6 +10,7 @@ from PIL import Image
 #from matplotlib import cm
 import numpy as np
 #import urllib
+from io import BytesIO
 
 def next_weekday(d, weekday):
     days_ahead = weekday - d.weekday()
@@ -82,7 +83,6 @@ def extract_image(update:Update,context:CallbackContext):
 
             PIL_image = Image.fromarray(crop_img.astype('uint8'), 'RGB')
 
-            from io import BytesIO
             bio = BytesIO()
             bio.name = 'image.jpeg'
             PIL_image.save(bio, 'JPEG')
