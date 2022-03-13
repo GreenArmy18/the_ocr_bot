@@ -4,3 +4,4 @@ python-dotenv
 NumPy
 Pillow
 opencv-python-headless
+urllib
