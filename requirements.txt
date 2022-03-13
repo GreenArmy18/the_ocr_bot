@@ -3,3 +3,4 @@ requests
 python-dotenv
 NumPy
 Pillow
+cv2
