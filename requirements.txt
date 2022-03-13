@@ -4,4 +4,3 @@ python-dotenv
 NumPy
 Pillow
 opencv-python
-python3-opencv

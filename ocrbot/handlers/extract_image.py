@@ -69,12 +69,14 @@ def extract_image(update:Update,context:CallbackContext):
             h=weight
             w=height
             
-            req = urllib.urlopen(file_path)
-            arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
-            img = cv2.imdecode(arr, -1) # 'Load it as it is'
+            #req = urllib.urlopen(file_path)
+            #arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
+            #img = cv2.imdecode(arr, -1) # 'Load it as it is'
 
             #cv2.imshow('lalala', img)
             #if cv2.waitKey() & 0xff == 27: quit()
+            response = requests.get(file_path)
+            img = Image.open(BytesIO(response.content))
 
             crop_img = img[y:y+h, x:x+w]
 
