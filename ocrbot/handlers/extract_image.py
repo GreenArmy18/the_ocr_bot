@@ -99,24 +99,25 @@ def extract_image(update:Update,context:CallbackContext):
             img = Image.open(BytesIO(response.content))
             img = img.convert('RGBA')
             pixels = np.array(img)
-            bg_value = np.copy(pixels[0, 0]).astype('int32')
-            h, w = pixels.shape[0:2]
-            print("starting dfs")
-            dfs_inplace(pixels, bg_value, 0, 0)
-            if pixels[-1, -1, -1] != 0:
-                dfs_inplace(pixels, bg_value, h - 1, w - 1)
+            #bg_value = np.copy(pixels[0, 0]).astype('int32')
+            #h, w = pixels.shape[0:2]
+            #print("starting dfs")
+            #dfs_inplace(pixels, bg_value, 0, 0)
+            #if pixels[-1, -1, -1] != 0:
+            #    dfs_inplace(pixels, bg_value, h - 1, w - 1)
 
             img = Image.fromarray(pixels)
-            while max(img.size) <= 512:
-                img = img.resize([2 * x for x in img.size])
-            img.thumbnail((512, 512), Image.ANTIALIAS)  # inplace
+            img.crop(x,y,h,w)
+            #while max(img.size) <= 512:
+            #    img = img.resize([2 * x for x in img.size])
+            #img.thumbnail((512, 512), Image.ANTIALIAS)  # inplace
 
             image_file = BytesIO()
             img.save(image_file, format='PNG', quality=95)
             image_file.seek(0)  # important, set pointer to beginning after writing image
             print("ready to send")
-            #m.edit_media(media=img)
-            update.message.edit_media(media=img)
+            update.message.reply_document(document=image_file)
+
             #crop_img = img[y:y+h, x:x+w]
 
             #PIL_image = Image.fromarray(crop_img.astype('uint8'), 'RGB')
