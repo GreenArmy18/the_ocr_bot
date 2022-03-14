@@ -115,7 +115,7 @@ def extract_image(update:Update,context:CallbackContext):
             img.save(image_file, format='PNG', quality=95)
             image_file.seek(0)  # important, set pointer to beginning after writing image
             print("ready to send")
-            m.edit_media(chat_id=update.message.chat_id, media=image_file)
+            m.edit_media(chat_id, media=image_file)
 
             #crop_img = img[y:y+h, x:x+w]
 
