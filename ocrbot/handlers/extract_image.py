@@ -96,6 +96,7 @@ def extract_image(update:Update,context:CallbackContext):
             #cv2.imshow('lalala', img)
             #if cv2.waitKey() & 0xff == 27: quit()
             response = requests.get(file_path)
+            print(response.content, 'ccc')
             img = Image.open(BytesIO(response.content))
             img = img.convert('RGBA')
             pixels = np.array(img)
@@ -115,7 +116,7 @@ def extract_image(update:Update,context:CallbackContext):
             img.save(image_file, format='PNG', quality=95)
             image_file.seek(0)  # important, set pointer to beginning after writing image
             print("ready to send")
-            m.edit_media(media=image_file)
+            m.edit_media(media=img)
 
             #crop_img = img[y:y+h, x:x+w]
 
