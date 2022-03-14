@@ -11,12 +11,31 @@ from PIL import Image
 import numpy as np
 #import urllib
 from io import BytesIO
+from collections import deque
 
 def next_weekday(d, weekday):
     days_ahead = weekday - d.weekday()
     if days_ahead <= 0: # Target day already happened this week
         days_ahead += 7
     return d + timedelta(days_ahead)
+
+def colors_roughly_equal(color1, color2, threshold=5):
+    return np.all(np.abs(color1 - color2) <= threshold)
+
+
+def dfs_inplace(matrix, color, i, j):
+    h, w = matrix.shape[0:2]
+    queue = deque([(i, j)])
+    while len(queue):
+        i, j = queue.popleft()
+        if matrix[i, j, -1] == 0 or not colors_roughly_equal(matrix[i, j], color):
+            continue
+        else:
+            matrix[i, j, -1] = 0
+        queue.append((min(i + 1, h - 1), j))
+        queue.append((max(0, i - 1), j))
+        queue.append((i, min(j + 1, w - 1)))
+        queue.append((i, max(j - 1, 0)))
 
 
 @send_typing_action
@@ -78,20 +97,39 @@ def extract_image(update:Update,context:CallbackContext):
             #if cv2.waitKey() & 0xff == 27: quit()
             response = requests.get(file_path)
             img = Image.open(BytesIO(response.content))
+            img = img.convert('RGBA')
+            pixels = np.array(img)
+            bg_value = np.copy(pixels[0, 0]).astype('int32')
+            h, w = pixels.shape[0:2]
+            print("starting dfs")
+            dfs_inplace(pixels, bg_value, 0, 0)
+            if pixels[-1, -1, -1] != 0:
+                dfs_inplace(pixels, bg_value, h - 1, w - 1)
 
-            crop_img = img[y:y+h, x:x+w]
+            img = Image.fromarray(pixels)
+            while max(img.size) <= 512:
+                img = img.resize([2 * x for x in img.size])
+            img.thumbnail((512, 512), Image.ANTIALIAS)  # inplace
 
-            PIL_image = Image.fromarray(crop_img.astype('uint8'), 'RGB')
+            image_file = BytesIO()
+            img.save(image_file, format='PNG', quality=95)
+            image_file.seek(0)  # important, set pointer to beginning after writing image
+            print("ready to send")
+            m.edit_media(chat_id=update.message.chat_id, media=image_file)
 
-            bio = BytesIO()
-            bio.name = 'image.jpeg'
-            PIL_image.save(bio, 'JPEG')
-            bio.seek(0)
-            m.edit_media(chat_id, photo=bio)
+            #crop_img = img[y:y+h, x:x+w]
 
-            message=data['ParsedResults'][0]['ParsedText']
-            total_hours_end, total_minutes_end, hours,minutes=calculate(message.splitlines())
-            m.edit_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
+            #PIL_image = Image.fromarray(crop_img.astype('uint8'), 'RGB')
+
+            #bio = BytesIO()
+            #bio.name = 'image.jpeg'
+            #PIL_image.save(bio, 'JPEG')
+            #bio.seek(0)
+            #m.edit_media(chat_id, photo=bio)
+
+            #message=data['ParsedResults'][0]['ParsedText']
+            #total_hours_end, total_minutes_end, hours,minutes=calculate(message.splitlines())
+            #m.edit_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
 
         else:
             m.edit_text(text="⚠️Something went wrong, please try again later ⚠️")
