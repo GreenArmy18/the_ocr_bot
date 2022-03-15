@@ -4,3 +4,4 @@ python-dotenv
 opencv-python==4.5.5.64
 NumPy
 Pillow
+cv2
