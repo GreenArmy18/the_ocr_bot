@@ -17,9 +17,8 @@ def next_weekday(d, weekday):
 
 def extract_data(file_path):
     try:
-        data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True", timeout=30)
+        return requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True", timeout=30)
     except requests.exceptions.Timeout: "⚠️נראה שיש עומס. נסי מאוחר יותר⚠️"
-    else: data
 
 @send_typing_action
 def extract_image(update:Update,context:CallbackContext):
@@ -41,6 +40,7 @@ def extract_image(update:Update,context:CallbackContext):
         text="⚠️נראה שיש עומס. נסי מאוחר יותר⚠️"
         #m.edit_text(text="⚠️נראה שיש עומס. נסי מאוחר יותר⚠️")
         data=extract_data(file_path)
+        print(data)
         if data != text:
             data=data.json()
         else:
