@@ -113,8 +113,8 @@ def extract_image(update:Update,context:CallbackContext):
             #img.thumbnail((512, 512), Image.ANTIALIAS)  # inplace
 
             image_file = BytesIO()
-            img.save(image_file)
-            image_file.seek(0)  # important, set pointer to beginning after writing image
+            img.save(image_file, format='JPEG')
+            #image_file.seek(0)  # important, set pointer to beginning after writing image
             print("ready to send")
             update.message.reply_document(document=image_file)
 
