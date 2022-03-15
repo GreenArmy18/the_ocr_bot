@@ -111,12 +111,12 @@ def extract_image(update:Update,context:CallbackContext):
             image_file.seek(0)  # important, set pointer to beginning after writing image
             print("ready to send")
             #m.edit_media(media=image_file)
-            update.message.reply_photo(photo=image_file, quote=True)
+            nm=update.message.reply_photo(photo=image_file, quote=True)
             file_id = update.message.photo[-1].file_id
             print(update.message.effective_attachment[-1].get_file().file_id)
             print(update.message.effective_attachment[-1].get_file().file_path)
             print(update.message.effective_attachment[-1].get_file(file_id).file_path)
-
+            print(nm)
 
             #print(file_id,'file_id')
             newFile=context.bot.get_file(file_id)
