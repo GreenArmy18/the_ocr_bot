@@ -48,24 +48,16 @@ def extract_image(update:Update,context:CallbackContext):
                 if data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['WordText']=='09':
                     l,t= data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['Left'], data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['Top']
             print(l,t)
-            #l=391
-            l+=45
-            l-=300
 
-            #t=1104
-            t+=40
-            t-=295
-
-            
             response = requests.get(file_path)
             img = Image.open(BytesIO(response.content))
             pixels = np.array(img)          
             img = Image.fromarray(pixels)
-            width, height = img.size
-            left = l
-            top = height-t
-            right = width -l
-            bottom = t-150
+            
+            left = 136
+            top = t-210 
+            right = 440
+            bottom = t+40
 
             img1 = img.crop((left, top, right, bottom))
             image_file = BytesIO()
@@ -104,10 +96,8 @@ def calculate(data_list):
         str1 = ''.join(str(e) for e in data_list[x-1])
 
         pos_flags=[i for i, letter in enumerate(str1) if letter == ':']
-        print(pos_flags)
 
         for i in range (2):
-            print((str1[pos_flags[i]-2:pos_flags[i]+3]).split(" "))
             hours.append((str1[pos_flags[i]-2:pos_flags[i]+3]).split(" "))
 
     from datetime import datetime
