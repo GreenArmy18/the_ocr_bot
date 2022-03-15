@@ -6,38 +6,14 @@ from datetime import timedelta, date
 import re
 import requests
 from PIL import Image
-#import cv2
-#from matplotlib import cm
 import numpy as np
-#import urllib
 from io import BytesIO
-from collections import deque
-import cv2
 
 def next_weekday(d, weekday):
     days_ahead = weekday - d.weekday()
     if days_ahead <= 0: # Target day already happened this week
         days_ahead += 7
     return d + timedelta(days_ahead)
-
-def colors_roughly_equal(color1, color2, threshold=5):
-    return np.all(np.abs(color1 - color2) <= threshold)
-
-
-def dfs_inplace(matrix, color, i, j):
-    h, w = matrix.shape[0:2]
-    queue = deque([(i, j)])
-    while len(queue):
-        i, j = queue.popleft()
-        if matrix[i, j, -1] == 0 or not colors_roughly_equal(matrix[i, j], color):
-            continue
-        else:
-            matrix[i, j, -1] = 0
-        queue.append((min(i + 1, h - 1), j))
-        queue.append((max(0, i - 1), j))
-        queue.append((i, min(j + 1, w - 1)))
-        queue.append((i, max(j - 1, 0)))
-
 
 @send_typing_action
 def extract_image(update:Update,context:CallbackContext):
@@ -68,7 +44,7 @@ def extract_image(update:Update,context:CallbackContext):
         if data['IsErroredOnProcessing']==False:
             size=len(data['ParsedResults'][0]['TextOverlay']['Lines'])
             for x in range(size):
-            #if data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['WordText']==today:
+                #if data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['WordText']==today:
                 if data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['WordText']=='09':
                     l,t= data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['Left'], data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['Top']
             print(l,t)
@@ -80,20 +56,10 @@ def extract_image(update:Update,context:CallbackContext):
             t+=40
             t-=295
 
-            #left=l
-            #top=t
-            #height=300
-            #weight=245
-
-            #x=left
-            #y=top
-            #h=weight
-            #w=height
             
             response = requests.get(file_path)
             img = Image.open(BytesIO(response.content))
             
-            #opencvImage = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
             
             pixels = np.array(img)
             
@@ -110,32 +76,21 @@ def extract_image(update:Update,context:CallbackContext):
             img1.save(image_file, format='JPEG')
             image_file.seek(0)  # important, set pointer to beginning after writing image
             print("ready to send")
-            #m.edit_media(media=image_file)
-            #m.edit_media(media=media=open('image.jpg', 'rb',caption='Title'))
 
             nm=update.message.reply_photo(photo=image_file, quote=True)
             file_id = update.message.photo[-1].file_id
-            #print(update.message.effective_attachment[-1].get_file().file_id)
-            #print(update.message.effective_attachment[-1].get_file().file_path,'fff')
-            #print(update.message.effective_attachment[-1].get_file(file_id).file_path)
-            #print(nm)
-            #print(nm.effective_attachment[-1].get_file().file_path,'ddd')
+            print(nm.effective_attachment[-1].get_file().file_path,'ddd')
             
             file_path=nm.effective_attachment[-1].get_file().file_path
-            #print(file_id,'file_id')
-            #newFile=context.bot.get_file(file_id)
-            #print(newFile,'newFile')
-            #file_path= newFile.file_path
-            #print(file_path,'ggg')
-            #print(file_path,'file_path')
             data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
             data=data.json()
             print(data)
             message=data['ParsedResults'][0]['ParsedText']
             print(message)
             total_hours_end, total_minutes_end, hours,minutes=calculate(message.splitlines())
-            m.edit_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
             nm.delete()
+            m.edit_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
+            
         else:
             m.edit_text(text="⚠️Something went wrong, please try again later ⚠️")
     else:
