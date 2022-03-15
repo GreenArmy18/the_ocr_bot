@@ -80,36 +80,47 @@ def extract_image(update:Update,context:CallbackContext):
             t+=40
             t-=295
 
-           
-            #response = requests.get(file_path)
-            #img = Image.open(BytesIO(response.content))
-            
-            
-            #pixels = np.array(img)
-            
-            
-            #img = Image.fromarray(pixels)
-            #width, height = img.size
-            #left = l
-            #top = height-t
-            #right = width -l
-            #bottom = t-150
+            #left=l
+            #top=t
+            #height=300
+            #weight=245
 
-            #img1 = img.crop((left, top, right, bottom))
-            #image_file = BytesIO()
-            #img1.save(image_file, format='JPEG')
-            #image_file.seek(0)  # important, set pointer to beginning after writing image
-            #print("ready to send")
+            #x=left
+            #y=top
+            #h=weight
+            #w=height
+            
+            response = requests.get(file_path)
+            img = Image.open(BytesIO(response.content))
+            
+            #opencvImage = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+            
+            pixels = np.array(img)
+            
+            
+            img = Image.fromarray(pixels)
+            width, height = img.size
+            left = l
+            top = height-t
+            right = width -l
+            bottom = t-150
+
+            img1 = img.crop((left, top, right, bottom))
+            image_file = BytesIO()
+            img1.save(image_file, format='JPEG')
+            image_file.seek(0)  # important, set pointer to beginning after writing image
+            print("ready to send")
             #m.edit_media(media=image_file)
-            #update.message.reply_photo(photo=image_file, quote=True)
-            #file_id = update.message.photo[-1].file_id
+            update.message.reply_photo(photo=image_file, quote=True)
+            file_id = update.message.photo[-1].file_id
             #print(file_id,'file_id')
-            #newFile=context.bot.get_file(file_id)
+            newFile=context.bot.get_file(file_id)
             #print(newFile,'newFile')
-            #file_path= newFile.file_path
+            file_path= newFile.file_path
             #print(file_path,'file_path')
-            #data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
-            #data=data.json()
+            data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
+            data=data.json()
+            print(data)
             message=data['ParsedResults'][0]['ParsedText']
             total_hours_end, total_minutes_end, hours,minutes=calculate(message.splitlines())
             m.edit_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
