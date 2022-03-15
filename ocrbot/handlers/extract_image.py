@@ -37,7 +37,7 @@ def extract_image(update:Update,context:CallbackContext):
     tommorw_date=next_thursday.strftime("%d/%m/%y")
     
     if file_path is not None:
-        data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True", timeout=55)
+        data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
         data=data.json()
         print(data, "data")
         
@@ -84,9 +84,7 @@ def extract_image(update:Update,context:CallbackContext):
                 message=data['ParsedResults'][0]['ParsedText']
                 print(message,'the text from the new image')
                 total_hours_end, total_minutes_end, hours,minutes=calculate(message.splitlines())
-                
                 m.edit_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
-
         else:
             m.edit_text(text="⚠️Something went wrong, please try again later ⚠️")
     else:
