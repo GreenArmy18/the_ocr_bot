@@ -106,7 +106,7 @@ def extract_image(update:Update,context:CallbackContext):
             left = l
             top = height-t
             right = width -l
-            bottom = t-130
+            bottom = t-170
 
             img1 = img.crop((left, top, right, bottom))
             image_file = BytesIO()
