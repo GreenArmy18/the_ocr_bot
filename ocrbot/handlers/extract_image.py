@@ -25,10 +25,10 @@ def extract_image(update:Update,context:CallbackContext):
     file_path= newFile.file_path
     m = update.message.reply_text('מנתח תמונה, רק רגע...',quote=True)    
 
-    #d = date.today() + timedelta(days=1)
-    #today=date.today()
-    #next_thursday = next_weekday(d, 3) # 0 = Monday, 1=Tuesday, 2=Wednesday...
-    #tommorw_date=next_thursday.strftime("%d/%m/%y")
+    d = date.today() + timedelta(days=1)
+    today=date.today()
+    next_thursday = next_weekday(d, 3) # 0 = Monday, 1=Tuesday, 2=Wednesday...
+    tommorw_date=next_thursday.strftime("%d/%m/%y")
     
     if file_path is not None:
         data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True", timeout=30)
