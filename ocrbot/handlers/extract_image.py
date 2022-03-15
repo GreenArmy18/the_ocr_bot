@@ -15,6 +15,12 @@ def next_weekday(d, weekday):
         days_ahead += 7
     return d + timedelta(days_ahead)
 
+def extract_data(file_path):
+    try:
+        data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True", timeout=30)
+    except requests.exceptions.Timeout: "⚠️נראה שיש עומס. נסי מאוחר יותר⚠️"
+    else: data
+
 @send_typing_action
 def extract_image(update:Update,context:CallbackContext):
     '''
@@ -31,9 +37,14 @@ def extract_image(update:Update,context:CallbackContext):
     tommorw_date=next_thursday.strftime("%d/%m/%y")
     
     if file_path is not None:
-        data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True", timeout=30)
-        m.edit_text(text="⚠️נראה שיש עומס. נסי מאוחר יותר⚠️")
-        data=data.json()
+        #data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True", timeout=30)
+        text="⚠️נראה שיש עומס. נסי מאוחר יותר⚠️"
+        #m.edit_text(text="⚠️נראה שיש עומס. נסי מאוחר יותר⚠️")
+        data=extract_data(file_path)
+        if data != text:
+            data=data.json()
+        else:
+            m.edit_text(text="⚠️נראה שיש עומס. נסי מאוחר יותר⚠️")
         print(data, "data")
         
         if data['IsErroredOnProcessing']==False:
