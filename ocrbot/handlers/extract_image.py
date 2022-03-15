@@ -144,6 +144,7 @@ def calculate(data_list):
         str1 = ''.join(str(e) for e in data_list[x-1])
 
         pos_flags=[i for i, letter in enumerate(str1) if letter == ':']
+        print(pos_flags)
 
         for i in range (2):
             hours.append((str1[pos_flags[i]-2:pos_flags[i]+3]).split(" "))
