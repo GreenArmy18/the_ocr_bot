@@ -39,14 +39,11 @@ def extract_image(update:Update,context:CallbackContext):
     if file_path is not None:
         try:
             data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True", timeout=30)
+        except:
+            m.edit_text(text="⚠️נראה שיש עומס. נסי מאוחר יותר⚠️")
+        else:
             data=data.json()
             print(data, "data")
-
-        except requests.exceptions.ReadTimeout:
-            m.edit_text(text="⚠️נראה שיש עומס. נסי מאוחר יותר⚠️")
-
-        data=data.json()
-        print(data, "data")
         
         if data['IsErroredOnProcessing']==False:
             if update.message.photo[-1].height== '1280' and update.message.photo[-1].width == '576':
@@ -79,7 +76,7 @@ def extract_image(update:Update,context:CallbackContext):
                 file_path=nm.effective_attachment[-1].get_file().file_path
                 try:
                     data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True", timeout=30)
-                except requests.exceptions.ReadTimeout:
+                except:
                     m.edit_text(text="⚠️נראה שיש עומס. נסי מאוחר יותר⚠️")
                 nm.delete()
                 data=data.json()
