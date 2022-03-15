@@ -31,13 +31,10 @@ def extract_image(update:Update,context:CallbackContext):
     #tommorw_date=next_thursday.strftime("%d/%m/%y")
     
     if file_path is not None:
-        try:
-            data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True", timeout=30)
-        except:
-            m.edit_text(text="⚠️נראה שיש עומס. נסי מאוחר יותר⚠️")
-        else:
-            data=data.json()
-            print(data, "data")
+        data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True", timeout=30)
+        m.edit_text(text="⚠️נראה שיש עומס. נסי מאוחר יותר⚠️")
+        data=data.json()
+        print(data, "data")
         
         if data['IsErroredOnProcessing']==False:
             if update.message.photo[-1].height== '1280' and update.message.photo[-1].width == '576':
