@@ -71,17 +71,17 @@ def extract_image(update:Update,context:CallbackContext):
             #if data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['WordText']==today:
                 if data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['WordText']=='02':
                     l,t= data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['Left'], data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['Top']
-            
-            #l=391
+            print(l,t)
+            l=391
             l+=45
             l-=300
 
-            #t=1104
+            t=1104
             t+=40
             t-=295
 
-            left=l
-            top=t
+            #left=l
+            #top=t
             #height=300
             #weight=245
 
