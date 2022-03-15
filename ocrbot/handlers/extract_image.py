@@ -117,7 +117,7 @@ def extract_image(update:Update,context:CallbackContext):
             print(update.message.effective_attachment[-1].get_file().file_path,'fff')
             #print(update.message.effective_attachment[-1].get_file(file_id).file_path)
             print(nm)
-            print(nm.effective_attachment[-1].get_file().file_id)
+            print(nm.effective_attachment[-1].get_file().file_path)
 
             #print(file_id,'file_id')
             newFile=context.bot.get_file(file_id)
