@@ -116,8 +116,8 @@ def extract_image(update:Update,context:CallbackContext):
             img.save(image_file, format='JPEG')
             image_file.seek(0)  # important, set pointer to beginning after writing image
             print("ready to send")
-            m.edit_media(media=image_file)
-            #update.message.reply_photo(photo=image_file, quote=True)
+            #m.edit_media(media=image_file)
+            update.message.reply_photo(photo=image_file, quote=True)
 
             #crop_img = img[y:y+h, x:x+w]
 
