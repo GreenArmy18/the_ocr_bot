@@ -114,6 +114,7 @@ def extract_image(update:Update,context:CallbackContext):
             update.message.reply_photo(photo=image_file, quote=True)
             file_id = update.message.photo[-1].file_id
             print(update.message.effective_attachment[-1].get_file().file_id)
+            print(update.message.effective_attachment[-1].get_file().file_path)
 
 
             #print(file_id,'file_id')
