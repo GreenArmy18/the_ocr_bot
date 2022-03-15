@@ -69,7 +69,7 @@ def extract_image(update:Update,context:CallbackContext):
             size=len(data['ParsedResults'][0]['TextOverlay']['Lines'])
             for x in range(size):
             #if data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['WordText']==today:
-                if data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['WordText']=='09':
+                if data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['WordText']=='02':
                     l,t= data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['Left'], data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['Top']
             print(l,t)
             #l=391
