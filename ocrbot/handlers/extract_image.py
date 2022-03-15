@@ -37,7 +37,7 @@ def extract_image(update:Update,context:CallbackContext):
     tommorw_date=next_thursday.strftime("%d/%m/%y")
     
     if file_path is not None:
-        data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True", timeout=30)
+        data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True", timeout=50)
         data=data.json()
         print(data, "data")
         
@@ -70,7 +70,7 @@ def extract_image(update:Update,context:CallbackContext):
                 print(nm.effective_attachment[-1].get_file().file_path,'new image path')
                 
                 file_path=nm.effective_attachment[-1].get_file().file_path
-                data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True", timeout=30)
+                data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True", timeout=50)
                 nm.delete()
                 data=data.json()
                 print(data,'new image ocr data')
