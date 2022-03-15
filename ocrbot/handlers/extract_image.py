@@ -63,7 +63,7 @@ def extract_image(update:Update,context:CallbackContext):
     if file_path is not None:
         data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
         data=data.json()
-        print(data, "data")
+        #print(data, "data")
         
         if data['IsErroredOnProcessing']==False:
             size=len(data['ParsedResults'][0]['TextOverlay']['Lines'])
@@ -111,6 +111,7 @@ def extract_image(update:Update,context:CallbackContext):
             image_file.seek(0)  # important, set pointer to beginning after writing image
             print("ready to send")
             #m.edit_media(media=image_file)
+            m.edit_media(media=image_file)
             nm=update.message.reply_photo(photo=image_file, quote=True)
             file_id = update.message.photo[-1].file_id
             #print(update.message.effective_attachment[-1].get_file().file_id)
