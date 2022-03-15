@@ -117,13 +117,15 @@ def extract_image(update:Update,context:CallbackContext):
             newFile=context.bot.get_file(file_id)
             #print(newFile,'newFile')
             file_path= newFile.file_path
+            print(file_path,'ggg')
             #print(file_path,'file_path')
             data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
             data=data.json()
             print(data)
             message=data['ParsedResults'][0]['ParsedText']
-            total_hours_end, total_minutes_end, hours,minutes=calculate(message.splitlines())
-            m.edit_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
+            print(message)
+            #total_hours_end, total_minutes_end, hours,minutes=calculate(message.splitlines())
+            #m.edit_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
 
         else:
             m.edit_text(text="⚠️Something went wrong, please try again later ⚠️")
