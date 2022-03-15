@@ -98,9 +98,9 @@ def extract_image(update:Update,context:CallbackContext):
             #if cv2.waitKey() & 0xff == 27: quit()
             response = requests.get(file_path)
             img = Image.open(BytesIO(response.content))
-            open_cv_image = np.array(img) 
+            #open_cv_image = np.array(img) 
             # Convert RGB to BGR 
-            open_cv_image = open_cv_image[:, :, ::-1].copy() 
+            #open_cv_image = open_cv_image[:, :, ::-1].copy() 
 
             #img = img.convert('RGBA')
             pixels = np.array(img)
