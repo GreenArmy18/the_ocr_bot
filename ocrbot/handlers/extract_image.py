@@ -109,7 +109,7 @@ def extract_image(update:Update,context:CallbackContext):
             #    dfs_inplace(pixels, bg_value, h - 1, w - 1)
 
             img = Image.fromarray(pixels)
-            img = img[y:y+h, x:x+w]
+            img = image_file[y:y+h, x:x+w]
             #img=img.crop((20,20,20,20))
             #while max(img.size) <= 512:
             #    img = img.resize([2 * x for x in img.size])
