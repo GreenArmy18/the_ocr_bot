@@ -90,38 +90,19 @@ def extract_image(update:Update,context:CallbackContext):
             h=weight
             w=height
             
-            #req = urllib.urlopen(file_path)
-            #arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
-            #img = cv2.imdecode(arr, -1) # 'Load it as it is'
-
-            #cv2.imshow('lalala', img)
-            #if cv2.waitKey() & 0xff == 27: quit()
             response = requests.get(file_path)
             img = Image.open(BytesIO(response.content))
-            opencvImage = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
-            #open_cv_image = np.array(img) 
-            # Convert RGB to BGR 
-            #open_cv_image = open_cv_image[:, :, ::-1].copy() 
-
-            #img = img.convert('RGBA')
-            pixels = np.array(img)
-            opc=np.asarray(opencvImage)
-            #print(pixels,'pix')
-            #crop_img = img[y:y+h, x:x+w]
-            #bg_value = np.copy(pixels[0, 0]).astype('int32')
-            #h, w = pixels.shape[0:2]
-            #print("starting dfs")
-            #dfs_inplace(pixels, bg_value, 0, 0)
-            #if pixels[-1, -1, -1] != 0:
-            #    dfs_inplace(pixels, bg_value, h - 1, w - 1)
-            duplicate_img= cv2.imread(opc)
-            new_image = duplicate_img[y:y+h, x:x+w]
-            img = Image.fromarray(new_image)
             
-            #img=img.crop((20,20,20,20))
-            #while max(img.size) <= 512:
-            #    img = img.resize([2 * x for x in img.size])
-            #img.thumbnail((512, 512), Image.ANTIALIAS)  # inplace
+            #opencvImage = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+            
+            pixels = np.array(img)
+            
+            #opc=np.asarray(opencvImage)
+            #duplicate_img= cv2.imread(opc)
+            #new_image = duplicate_img[y:y+h, x:x+w]
+            
+            img = Image.fromarray(pixels)
+            
 
             image_file = BytesIO()
             img.save(image_file, format='JPEG')
@@ -130,15 +111,6 @@ def extract_image(update:Update,context:CallbackContext):
             #m.edit_media(media=image_file)
             update.message.reply_photo(photo=image_file, quote=True)
 
-            #crop_img = img[y:y+h, x:x+w]
-
-            #PIL_image = Image.fromarray(crop_img.astype('uint8'), 'RGB')
-
-            #bio = BytesIO()
-            #bio.name = 'image.jpeg'
-            #PIL_image.save(bio, 'JPEG')
-            #bio.seek(0)
-            #m.edit_media(chat_id, photo=bio)
 
             #message=data['ParsedResults'][0]['ParsedText']
             #total_hours_end, total_minutes_end, hours,minutes=calculate(message.splitlines())
