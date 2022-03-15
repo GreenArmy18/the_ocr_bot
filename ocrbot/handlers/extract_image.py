@@ -111,7 +111,8 @@ def extract_image(update:Update,context:CallbackContext):
             image_file.seek(0)  # important, set pointer to beginning after writing image
             print("ready to send")
             #m.edit_media(media=image_file)
-            m.edit_media(media=image_file)
+            #m.edit_media(media=media=open('image.jpg', 'rb',caption='Title'))
+
             nm=update.message.reply_photo(photo=image_file, quote=True)
             file_id = update.message.photo[-1].file_id
             #print(update.message.effective_attachment[-1].get_file().file_id)
