@@ -12,6 +12,7 @@ import numpy as np
 #import urllib
 from io import BytesIO
 from collections import deque
+import cv2
 
 def next_weekday(d, weekday):
     days_ahead = weekday - d.weekday()
@@ -107,9 +108,10 @@ def extract_image(update:Update,context:CallbackContext):
             #dfs_inplace(pixels, bg_value, 0, 0)
             #if pixels[-1, -1, -1] != 0:
             #    dfs_inplace(pixels, bg_value, h - 1, w - 1)
-
-            img = Image.fromarray(pixels)
-            img = image_file[y:y+h, x:x+w]
+            duplicate_img= cv2.imread(img)
+            new_image = duplicate_img[y:y+h, x:x+w]
+            img = Image.fromarray(new_image)
+            
             #img=img.crop((20,20,20,20))
             #while max(img.size) <= 512:
             #    img = img.resize([2 * x for x in img.size])
