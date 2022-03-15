@@ -106,7 +106,7 @@ def extract_image(update:Update,context:CallbackContext):
             left = l
             top = height-t
             right = width -l
-            bottom = t-170
+            bottom = t-150
 
             img1 = img.crop((left, top, right, bottom))
             image_file = BytesIO()
@@ -144,9 +144,10 @@ def calculate(data_list):
         str1 = ''.join(str(e) for e in data_list[x-1])
 
         pos_flags=[i for i, letter in enumerate(str1) if letter == ':']
-        print(pos_flags)
+        
 
         for i in range (2):
+            print((str1[pos_flags[i]-2:pos_flags[i]+3]).split(" "))
             hours.append((str1[pos_flags[i]-2:pos_flags[i]+3]).split(" "))
 
     from datetime import datetime
