@@ -105,6 +105,7 @@ def extract_image(update:Update,context:CallbackContext):
 
             #img = img.convert('RGBA')
             pixels = np.array(img)
+            opc=np.asarray(opencvImage)
             #print(pixels,'pix')
             #crop_img = img[y:y+h, x:x+w]
             #bg_value = np.copy(pixels[0, 0]).astype('int32')
@@ -113,7 +114,7 @@ def extract_image(update:Update,context:CallbackContext):
             #dfs_inplace(pixels, bg_value, 0, 0)
             #if pixels[-1, -1, -1] != 0:
             #    dfs_inplace(pixels, bg_value, h - 1, w - 1)
-            duplicate_img= cv2.imread(opencvImage)
+            duplicate_img= cv2.imread(opc)
             new_image = duplicate_img[y:y+h, x:x+w]
             img = Image.fromarray(new_image)
             
