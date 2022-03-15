@@ -100,7 +100,7 @@ def extract_image(update:Update,context:CallbackContext):
             img = Image.open(BytesIO(response.content))
             #img = img.convert('RGBA')
             pixels = np.array(img)
-            print(pixels)
+            #print(pixels,'pix')
             #crop_img = img[y:y+h, x:x+w]
             #bg_value = np.copy(pixels[0, 0]).astype('int32')
             #h, w = pixels.shape[0:2]

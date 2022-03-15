@@ -1,5 +1,6 @@
 python-telegram-bot==13.7
 requests
 python-dotenv
+opencv-python==4.5.5.64
 NumPy
 Pillow
