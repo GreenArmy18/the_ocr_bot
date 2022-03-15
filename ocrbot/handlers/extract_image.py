@@ -63,7 +63,7 @@ def extract_image(update:Update,context:CallbackContext):
     if file_path is not None:
         data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
         data=data.json()
-        #print(data, "data")
+        print(data, "data")
         
         if data['IsErroredOnProcessing']==False:
             size=len(data['ParsedResults'][0]['TextOverlay']['Lines'])
@@ -72,11 +72,11 @@ def extract_image(update:Update,context:CallbackContext):
                 if data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['WordText']=='09':
                     l,t= data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['Left'], data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['Top']
             print(l,t)
-            l=391
+            #l=391
             l+=45
             l-=300
 
-            t=1104
+            #t=1104
             t+=40
             t-=295
 
