@@ -42,49 +42,44 @@ def extract_image(update:Update,context:CallbackContext):
         print(data, "data")
         
         if data['IsErroredOnProcessing']==False:
-            if update.message.photo[-1].height== '1280' and update.message.photo[-1].width == '576':
-                size=len(data['ParsedResults'][0]['TextOverlay']['Lines'])
-                for x in range(size):
-                    #if data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['WordText']==today:
-                    if data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['WordText']=='02':
-                        l,t= data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['Left'], data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['Top']
-                print(l,t)
+            size=len(data['ParsedResults'][0]['TextOverlay']['Lines'])
+            for x in range(size):
+                #if data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['WordText']==today:
+                if data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['WordText']=='02':
+                    l,t= data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['Left'], data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['Top']
+            print(l,t)
 
-                response = requests.get(file_path)
-                img = Image.open(BytesIO(response.content))
-                pixels = np.array(img)
-                img = Image.fromarray(pixels)
-                
-                left = 136
-                top = t-210 
-                right = 440
-                bottom = t+40
+            response = requests.get(file_path)
+            img = Image.open(BytesIO(response.content))
+            pixels = np.array(img)          
+            img = Image.fromarray(pixels)
+            
+            left = 136
+            top = t-210 
+            right = 440
+            bottom = t+40
 
-                img1 = img.crop((left, top, right, bottom))
-                image_file = BytesIO()
-                img1.save(image_file, format='JPEG')
-                image_file.seek(0)  # important, set pointer to beginning after writing image
+            img1 = img.crop((left, top, right, bottom))
+            image_file = BytesIO()
+            img1.save(image_file, format='JPEG')
+            image_file.seek(0)  # important, set pointer to beginning after writing image
 
-                nm=update.message.reply_photo(photo=image_file, quote=True)
-                file_id = update.message.photo[-1].file_id
-                print(nm.effective_attachment[-1].get_file().file_path,'new image path')
-                
-                file_path=nm.effective_attachment[-1].get_file().file_path
-                data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
-                nm.delete()
-                data=data.json()
-                print(data,'new image ocr data')
-                
-                message=data['ParsedResults'][0]['ParsedText']
-                print(message,'the text from the new image')
-                total_hours_end, total_minutes_end, hours,minutes=calculate(message.splitlines())
-                
-                m.edit_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
-            #else:
-            #    message=data['ParsedResults'][0]['ParsedText']
-            #    print(message,'the text from the new imagee')
-            #    total_hours_end, total_minutes_end, hours,minutes=calculate(message.splitlines())
-            #    m.edit_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
+            nm=update.message.reply_photo(photo=image_file, quote=True)
+            file_id = update.message.photo[-1].file_id
+            print(nm.effective_attachment[-1].get_file().file_path,'new image path')
+            
+            file_path=nm.effective_attachment[-1].get_file().file_path
+            data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
+            nm.delete()
+            data=data.json()
+            print(data,'new image ocr data')
+            
+            message=data['ParsedResults'][0]['ParsedText']
+            print(message,'the text from the new image')
+            total_hours_end, total_minutes_end, hours,minutes=calculate(message.splitlines())
+            
+            m.edit_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
+            
         else:
             m.edit_text(text="⚠️Something went wrong, please try again later ⚠️")
     else:
