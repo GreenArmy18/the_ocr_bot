@@ -98,9 +98,10 @@ def extract_image(update:Update,context:CallbackContext):
             #if cv2.waitKey() & 0xff == 27: quit()
             response = requests.get(file_path)
             img = Image.open(BytesIO(response.content))
-            open_cv_image = np.array(img) 
+            opencvImage = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+            #open_cv_image = np.array(img) 
             # Convert RGB to BGR 
-            open_cv_image = open_cv_image[:, :, ::-1].copy() 
+            #open_cv_image = open_cv_image[:, :, ::-1].copy() 
 
             #img = img.convert('RGBA')
             pixels = np.array(img)
@@ -112,7 +113,7 @@ def extract_image(update:Update,context:CallbackContext):
             #dfs_inplace(pixels, bg_value, 0, 0)
             #if pixels[-1, -1, -1] != 0:
             #    dfs_inplace(pixels, bg_value, h - 1, w - 1)
-            duplicate_img= cv2.imread(open_cv_image)
+            duplicate_img= cv2.imread(opencvImage)
             new_image = duplicate_img[y:y+h, x:x+w]
             img = Image.fromarray(new_image)
             
