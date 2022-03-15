@@ -78,17 +78,17 @@ def extract_image(update:Update,context:CallbackContext):
 
             #t=1104
             t+=40
-            t-=255
+            t-=295
 
             left=l
             top=t
-            height=300
-            weight=245
+            #height=300
+            #weight=245
 
-            x=left
-            y=top
-            h=weight
-            w=height
+            #x=left
+            #y=top
+            #h=weight
+            #w=height
             
             response = requests.get(file_path)
             img = Image.open(BytesIO(response.content))
@@ -102,10 +102,15 @@ def extract_image(update:Update,context:CallbackContext):
             #new_image = duplicate_img[y:y+h, x:x+w]
             
             img = Image.fromarray(pixels)
-            
+            width, height = img.size
+            left = l
+            top = height-t
+            right = width -l
+            bottom = t-150
 
+            img1 = img.crop((left, top, right, bottom))
             image_file = BytesIO()
-            img.save(image_file, format='JPEG')
+            img1.save(image_file, format='JPEG')
             image_file.seek(0)  # important, set pointer to beginning after writing image
             print("ready to send")
             #m.edit_media(media=image_file)
