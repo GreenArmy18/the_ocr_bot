@@ -16,10 +16,8 @@ def next_weekday(d, weekday):
     return d + timedelta(days_ahead)
 
 def extract_data(file_path):
-    try:
-        return requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True", timeout=30)
-    except requests.exceptions.Timeout: "⚠️נראה שיש עומס. נסי מאוחר יותר⚠️"
-
+    data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True", timeout=30)
+    
 @send_typing_action
 def extract_image(update:Update,context:CallbackContext):
     '''
@@ -36,16 +34,7 @@ def extract_image(update:Update,context:CallbackContext):
     tommorw_date=next_thursday.strftime("%d/%m/%y")
     
     if file_path is not None:
-        #data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True", timeout=30)
-        text="⚠️נראה שיש עומס. נסי מאוחר יותר⚠️"
-        #m.edit_text(text="⚠️נראה שיש עומס. נסי מאוחר יותר⚠️")
-        data=extract_data(file_path)
-        print(data)
-        if data != text:
-            data=data.json()
-        else:
-            m.edit_text(text="⚠️נראה שיש עומס. נסי מאוחר יותר⚠️")
-        print(data, "data")
+        data=(requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True", timeout=30)).json()
         
         if data['IsErroredOnProcessing']==False:
             if update.message.photo[-1].height== '1280' and update.message.photo[-1].width == '576':
@@ -54,12 +43,14 @@ def extract_image(update:Update,context:CallbackContext):
                     if data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['WordText']=='02':
                         l,t= data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['Left'], data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['Top']
 
-                response = requests.get(file_path)
-                img = Image.open(BytesIO(response.content))
-                pixels = np.array(img)
-                img = Image.fromarray(pixels) 
-                left, top, right,bottom=136,t-210,440,t+40
-                img1 = img.crop((left, top, right, bottom))
+                #response = requests.get(file_path)
+                #img = Image.open(BytesIO(response.content))
+                #pixels = np.array(img)
+                #img = Image.fromarray(pixels)
+                img = Image.fromarray((np.array((Image.open(BytesIO((requests.get(file_path)).content))))))
+                #left, top, right,bottom=136,t-210,440,t+40
+                #img1 = img.crop((left, top, right, bottom))
+                img1 = img.crop((136,t-210,440,t+40))
                 image_file = BytesIO()
                 img1.save(image_file, format='JPEG')
                 image_file.seek(0)  # important, set pointer to beginning after writing image
@@ -67,7 +58,7 @@ def extract_image(update:Update,context:CallbackContext):
                 file_path=nm.effective_attachment[-1].get_file().file_path
                 
                 data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True", timeout=30)
-                m.edit_text(text="⚠️נראה שיש עומס. נסי מאוחר יותר⚠️")
+                #m.edit_text(text="⚠️נראה שיש עומס. נסי מאוחר יותר⚠️")
                 nm.delete()
                 data=data.json()
                 message=data['ParsedResults'][0]['ParsedText']
@@ -77,7 +68,6 @@ def extract_image(update:Update,context:CallbackContext):
                 message=data['ParsedResults'][0]['ParsedText']
                 total_hours_end, total_minutes_end, hours,minutes=calculate(message.splitlines())
                 m.edit_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
-
         else:
             m.edit_text(text="⚠️נראה שיש בעיה. נסי מאוחר יותר⚠️")
     else:
