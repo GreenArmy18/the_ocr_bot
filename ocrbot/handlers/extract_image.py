@@ -105,10 +105,10 @@ def extract_image(update:Update,context:CallbackContext):
         for hour in hours_titles:
             values_size=len(response["document"]['inference']['prediction'][hour]["values"])
             print(values_size,'values_size')
-            
+
             if len(response["document"]['inference']['prediction']['wednesday_date']["values"])>1:
                     for value in range(values_size):
-                        if response["document"]['inference']['prediction']["wednesday_date"]["values"][value]["content"]=='02':
+                        #if response["document"]['inference']['prediction']["wednesday_date"]["values"][value]["content"]=='02':
                             #if response["document"]['inference']['prediction']["wednesday_date"]["values"][value]["content"]==today_date/yom_reviei:
                             if response["document"]['inference']['prediction'][hour]["values"][value]["confidence"]==1 or response["document"]['inference']['prediction'][hour]["values"][value]["confidence"]==1.0 or response["document"]['inference']['prediction'][hour]["values"][value]["confidence"]==0.99:
                                     hours.append(response["document"]['inference']['prediction'][hour]["values"][value]["content"])
