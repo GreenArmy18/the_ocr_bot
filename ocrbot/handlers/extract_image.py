@@ -92,8 +92,9 @@ def extract_image(update:Update,context:CallbackContext):
         headers = {"Authorization": "Token e2f347943462442cc768bd8ab9607149"}
         response = requests.post(url, files=files, headers=headers)
         response=response.json()
-        print(response)
         size=len(response["document"]['inference']['pages'][0]['prediction']["wednesday_date"]["values"])
+        print(size,'size')
+        hours=[]
 
         hours_titles=['sunday_start_time','sunday_end_time','monday_start_time','monday_end_time','tuesday_start_time','tuesday_end_time','wednesday_start_time','wednesday_end_time']
         start_hour_titles=['sunday_start_time','monday_start_time','tuesday_start_time','wednesday_start_time']
@@ -108,20 +109,22 @@ def extract_image(update:Update,context:CallbackContext):
                             #if response["document"]['inference']['prediction']["wednesday_date"]["values"][value]["content"]==today_date/yom_reviei:
                             if response["document"]['inference']['prediction'][hour]["values"][value]["confidence"]==1 or response["document"]['inference']['prediction'][hour]["values"][value]["confidence"]==1.0 or response["document"]['inference']['prediction'][hour]["values"][value]["confidence"]==0.99:
                                     hours.append(response["document"]['inference']['prediction'][hour]["values"][value]["content"])
-
             else:
                 for value in range(values_size):
                     #if response["document"]['inference']['prediction']["wednesday_date"]["values"][value]["content"]==today_date/yom_reviei:
                     if response["document"]['inference']['prediction'][hour]["values"][value]["confidence"]==1 or response["document"]['inference']['prediction'][hour]["values"][value]["confidence"]==1.0 or response["document"]['inference']['prediction'][hour]["values"][value]["confidence"]==0.99:
                             hours.append(response["document"]['inference']['prediction'][hour]["values"][value]["content"])
+                            
+
+        print(hours,'hours')
             
-            total_hours_end, total_minutes_end, hours,minutes=calculate(hours)
+        total_hours_end, total_minutes_end, hours,minutes=calculate(hours)
             
-            m.edit_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
+        m.edit_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
             
-        else:
-            m.edit_text(text="⚠️Something went wrong, please try again later ⚠️")
     else:
-        m.edit_text("Something went wrong, Send this image again")
+        m.edit_text(text="⚠️Something went wrong, please try again later ⚠️")
+    #else:
+        #m.edit_text("Something went wrong, Send this image again")
 
 
