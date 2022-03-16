@@ -100,9 +100,12 @@ def extract_image(update:Update,context:CallbackContext):
         start_hour_titles=['sunday_start_time','monday_start_time','tuesday_start_time','wednesday_start_time']
         end_hour_titles=['sunday_end_time','monday_end_time','tuesday_end_time','wednesday_end_time']
         start_hour,end_hour=[],[]
-
+        wed_size=len(response["document"]['inference']['prediction']['wednesday_date']["values"])
+        print(wed_size,'wed_size')
         for hour in hours_titles:
             values_size=len(response["document"]['inference']['prediction'][hour]["values"])
+            print(values_size,'values_size')
+            
             if len(response["document"]['inference']['prediction']['wednesday_date']["values"])>1:
                     for value in range(values_size):
                         if response["document"]['inference']['prediction']["wednesday_date"]["values"][value]["content"]=='02':
