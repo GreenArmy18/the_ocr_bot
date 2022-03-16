@@ -76,6 +76,7 @@ def extract_image(update:Update,context:CallbackContext):
             
             message=data['ParsedResults'][0]['ParsedText']
             print(message,'the text from the new image')
+            print(message.splitlines(),'split')
             total_hours_end, total_minutes_end, hours,minutes=calculate(message.splitlines())
             
             m.edit_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
@@ -92,16 +93,18 @@ def calculate(data_list):
     total_time=t1-t2
 
     hours=[]
-
+    print(data_list)
     for x in range(1,5):
         str1 = ''.join(str(e) for e in data_list[x-1])
         print(str1,'str1')
 
         pos_flags=[i for i, letter in enumerate(str1) if letter == ':']
         print(pos_flags,'pos_flags')
+
         for i in range (2):
             hours.append((str1[pos_flags[i]-2:pos_flags[i]+3]).split(" "))
         print(hours,'hours')
+
     from datetime import datetime
 
     for x in range(1,5):
