@@ -41,6 +41,7 @@ def extract_image(update:Update,context:CallbackContext):
         headers = {"Authorization": "Token e2f347943462442cc768bd8ab9607149"}
         response = requests.post(url, files=files, headers=headers)
         response=response.json()
+        print(response)
         print(response["document"]['inference']['pages'][0]['prediction']["sunday_date"]["values"][0]["content"])        
         #total_hours_end, total_minutes_end, hours,minutes=calculate(message.splitlines())
            
