@@ -37,7 +37,7 @@ def extract_image(update:Update,context:CallbackContext):
     tommorw_date=next_thursday.strftime("%d/%m/%y")
     url = "https://api.mindee.net/v1/products/GreenArmy/screenshot/v1/predict"
     if file_path is not None:
-        files = {"document": file_path}
+        files = {"document": update.message.photo[-1]}
         headers = {"Authorization": "Token e2f347943462442cc768bd8ab9607149"}
         response = requests.post(url, files=files, headers=headers)
         response=response.json()
