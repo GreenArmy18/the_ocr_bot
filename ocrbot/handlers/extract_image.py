@@ -2,12 +2,13 @@ from ocrbot.helpers.decorators import send_typing_action
 from telegram import Update
 from telegram.ext import CallbackContext
 from ocrbot.config import API_KEY
-from datetime import timedelta, date
+from datetime import timedelta, date, datetime
 import re
 import requests
 from PIL import Image
 import numpy as np
 from io import BytesIO
+#from datetime import timedelta, datetime
 
 def next_weekday(d, weekday):
     days_ahead = weekday - d.weekday()
@@ -35,49 +36,40 @@ def extract_image(update:Update,context:CallbackContext):
     today=date.today()
     next_thursday = next_weekday(d, 3) # 0 = Monday, 1=Tuesday, 2=Wednesday...
     tommorw_date=next_thursday.strftime("%d/%m/%y")
-    
+    url = "https://api.mindee.net/v1/products/GreenArmy/screenshot/v1/predict"
+
     if file_path is not None:
-        data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
-        data=data.json()
-        print(data, "data")
-        
-        if data['IsErroredOnProcessing']==False:
-            size=len(data['ParsedResults'][0]['TextOverlay']['Lines'])
-            for x in range(size):
-                #if data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['WordText']==today:
-                if data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['WordText']=='02':
-                    l,t= data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['Left'], data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['Top']
-            print(l,t)
+        response = requests.get(file_path)
+        img = Image.open(BytesIO(response.content))
+        image_file = BytesIO()
+        img.save(image_file, format='JPEG')
+        image_file.seek(0)  # important, set pointer to beginning after writing image
+        files = {"document": image_file}
+        headers = {"Authorization": "Token e2f347943462442cc768bd8ab9607149"}
+        response = requests.post(url, files=files, headers=headers)
+        response=response.json()
+        size=len(response["document"]['inference']['pages'][0]['prediction']["wednesday_date"]["values"])
 
-            response = requests.get(file_path)
-            img = Image.open(BytesIO(response.content))
-            pixels = np.array(img)          
-            img = Image.fromarray(pixels)
-            
-            left = 136
-            top = t-210 
-            right = 440
-            bottom = t+40
+        hours_titles=['sunday_start_time','sunday_end_time','monday_start_time','monday_end_time','tuesday_start_time','tuesday_end_time','wednesday_start_time','wednesday_end_time']
+        start_hour_titles=['sunday_start_time','monday_start_time','tuesday_start_time','wednesday_start_time']
+        end_hour_titles=['sunday_end_time','monday_end_time','tuesday_end_time','wednesday_end_time']
+        start_hour,end_hour=[],[]
+        for hour in hours_titles:
+            values_size=len(response["document"]['inference']['prediction'][hour]["values"])
+            if len(response["document"]['inference']['prediction']['wednesday_date']["values"])>1:
+                    for value in range(values_size):
+                        if response["document"]['inference']['prediction']["wednesday_date"]["values"][value]["content"]=='02':
+                            #if response["document"]['inference']['prediction']["wednesday_date"]["values"][value]["content"]==today_date/yom_reviei:
+                            if response["document"]['inference']['prediction'][hour]["values"][value]["confidence"]==1 or response["document"]['inference']['prediction'][hour]["values"][value]["confidence"]==1.0 or response["document"]['inference']['prediction'][hour]["values"][value]["confidence"]==0.99:
+                                    hours.append(response["document"]['inference']['prediction'][hour]["values"][value]["content"])
 
-            img1 = img.crop((left, top, right, bottom))
-            image_file = BytesIO()
-            img1.save(image_file, format='JPEG')
-            image_file.seek(0)  # important, set pointer to beginning after writing image
-
-            nm=update.message.reply_photo(photo=image_file, quote=True)
-            file_id = update.message.photo[-1].file_id
-            print(nm.effective_attachment[-1].get_file().file_path,'new image path')
+            else:
+                for value in range(values_size):
+                    #if response["document"]['inference']['prediction']["wednesday_date"]["values"][value]["content"]==today_date/yom_reviei:
+                    if response["document"]['inference']['prediction'][hour]["values"][value]["confidence"]==1 or response["document"]['inference']['prediction'][hour]["values"][value]["confidence"]==1.0 or response["document"]['inference']['prediction'][hour]["values"][value]["confidence"]==0.99:
+                            hours.append(response["document"]['inference']['prediction'][hour]["values"][value]["content"])
             
-            file_path=nm.effective_attachment[-1].get_file().file_path
-            data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
-            nm.delete()
-            data=data.json()
-            print(data,'new image ocr data')
-            
-            message=data['ParsedResults'][0]['ParsedText']
-            print(message,'the text from the new image')
-            print(message.splitlines(),'split')
-            total_hours_end, total_minutes_end, hours,minutes=calculate(message.splitlines())
+            total_hours_end, total_minutes_end, hours,minutes=calculate(hours)
             
             m.edit_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
             
@@ -88,34 +80,28 @@ def extract_image(update:Update,context:CallbackContext):
 
 
 def calculate(data_list):
+    start_hour,end_hour=[],[]
+    for i in range(len(data_list)):
+        if i%2:
+            end_hour.append(data_list[i])
+        else: start_hour.append(data_list[i])
+    print(start_hour)
+    print(end_hour)
+
     t1=timedelta(hours=1, milliseconds=0)
     t2=timedelta(hours=1, milliseconds=0)
     total_time=t1-t2
 
-    hours=[]
-    print(data_list)
-    for x in range(1,5):
-        str1 = ''.join(str(e) for e in data_list[x-1])
-        print(str1,'str1')
-
-        pos_flags=[i for i, letter in enumerate(str1) if letter == ':']
-        print(pos_flags,'pos_flags')
-
-        for i in range (2):
-            hours.append((str1[pos_flags[i]-2:pos_flags[i]+3]).split(" "))
-        print(hours,'hours')
-
-    from datetime import datetime
-
-    for x in range(1,5):
-        first_time=re.sub('[^0-9]', '', str(hours[x*2-2]))
-        second_time=re.sub('[^0-9]', '', str(hours[x+x-1]))
+    for x in range(4):
+        first_time=re.sub('[^0-9]', '', str(start_hour[x]))
+        second_time=re.sub('[^0-9]', '', str(end_hour[x]))
+        
         print(first_time,second_time)
 
         time1 = datetime.strptime(first_time,"%H%M") # convert string to time
 
         time2 = datetime.strptime(second_time,"%H%M")
-        diff = time1 - time2
+        diff = time2 - time1
         total_time+=(diff)
 
     test=total_time
@@ -128,8 +114,9 @@ def calculate(data_list):
 
     total_hours=(str(total)[:-3].split(":"))[0]
     total_minutes=(str(total)[:-3].split(":"))[1]
-    
+
     if total_minutes[:-1]=='0':
         total_minutes=total_minutes[1:]
+
     print(total_hours_end, total_minutes_end, total_hours, total_minutes)
     return total_hours_end, total_minutes_end, total_hours, total_minutes
