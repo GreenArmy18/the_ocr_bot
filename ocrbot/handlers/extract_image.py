@@ -110,6 +110,7 @@ def calculate(data_list):
     for x in range(1,5):
         first_time=re.sub('[^0-9]', '', str(hours[x*2-2]))
         second_time=re.sub('[^0-9]', '', str(hours[x+x-1]))
+        print(first_time,second_time)
 
         time1 = datetime.strptime(first_time,"%H%M") # convert string to time
 
@@ -130,5 +131,5 @@ def calculate(data_list):
     
     if total_minutes[:-1]=='0':
         total_minutes=total_minutes[1:]
-
+    print(total_hours_end, total_minutes_end, total_hours, total_minutes)
     return total_hours_end, total_minutes_end, total_hours, total_minutes
