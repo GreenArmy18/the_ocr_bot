@@ -35,8 +35,12 @@ def extract_image(update:Update,context:CallbackContext):
     today=date.today()
     next_thursday = next_weekday(d, 3) # 0 = Monday, 1=Tuesday, 2=Wednesday...
     tommorw_date=next_thursday.strftime("%d/%m/%y")
-    url = "https://api.mindee.net/v1/products/GreenArmy/screenshot/v1/predict"
+    
     if file_path is not None:
+        data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
+        data=data.json()
+        print(data, "data")
+        
         if data['IsErroredOnProcessing']==False:
             size=len(data['ParsedResults'][0]['TextOverlay']['Lines'])
             for x in range(size):
@@ -56,7 +60,6 @@ def extract_image(update:Update,context:CallbackContext):
             bottom = t+40
 
             img1 = img.crop((left, top, right, bottom))
-            
             image_file = BytesIO()
             img1.save(image_file, format='JPEG')
             image_file.seek(0)  # important, set pointer to beginning after writing image
@@ -73,10 +76,10 @@ def extract_image(update:Update,context:CallbackContext):
             
             message=data['ParsedResults'][0]['ParsedText']
             print(message,'the text from the new image')
-            print(message.splitlines(),'split')
             total_hours_end, total_minutes_end, hours,minutes=calculate(message.splitlines())
-           
-            m.edit_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')   
+            
+            m.edit_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
+            
         else:
             m.edit_text(text="⚠️Something went wrong, please try again later ⚠️")
     else:
@@ -92,13 +95,12 @@ def calculate(data_list):
 
     for x in range(1,5):
         str1 = ''.join(str(e) for e in data_list[x-1])
-        print(str1,'str1')
 
         pos_flags=[i for i, letter in enumerate(str1) if letter == ':']
-        print(pos_flags,'pos_flags')
+
         for i in range (2):
             hours.append((str1[pos_flags[i]-2:pos_flags[i]+3]).split(" "))
-        print(hours,'hours')
+
     from datetime import datetime
 
     for x in range(1,5):
