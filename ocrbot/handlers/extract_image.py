@@ -95,12 +95,13 @@ def calculate(data_list):
 
     for x in range(1,5):
         str1 = ''.join(str(e) for e in data_list[x-1])
+        print(str1,'str1')
 
         pos_flags=[i for i, letter in enumerate(str1) if letter == ':']
-
+        print(pos_flags,'pos_flags')
         for i in range (2):
             hours.append((str1[pos_flags[i]-2:pos_flags[i]+3]).split(" "))
-
+        print(hours,'hours')
     from datetime import datetime
 
     for x in range(1,5):
