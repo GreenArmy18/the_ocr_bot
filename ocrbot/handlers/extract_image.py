@@ -36,13 +36,19 @@ def extract_image(update:Update,context:CallbackContext):
     next_thursday = next_weekday(d, 3) # 0 = Monday, 1=Tuesday, 2=Wednesday...
     tommorw_date=next_thursday.strftime("%d/%m/%y")
     url = "https://api.mindee.net/v1/products/GreenArmy/screenshot/v1/predict"
-    if file_path is not None:
-        files = {"document": update.message.photo[-1]}
+    if file_path is not None:        
+        response = requests.get(file_path)
+        img = Image.open(BytesIO(response.content))
+        image_file = BytesIO()
+        img.save(image_file, format='JPEG')
+        image_file.seek(0)  # important, set pointer to beginning after writing image
+        files = {"document": image_file}
         headers = {"Authorization": "Token e2f347943462442cc768bd8ab9607149"}
         response = requests.post(url, files=files, headers=headers)
         response=response.json()
         print(response)
         print(response["document"]['inference']['pages'][0]['prediction']["sunday_date"]["values"][0]["content"])        
+
         #total_hours_end, total_minutes_end, hours,minutes=calculate(message.splitlines())
            
         #m.edit_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
