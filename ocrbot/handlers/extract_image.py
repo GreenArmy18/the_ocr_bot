@@ -36,25 +36,49 @@ def extract_image(update:Update,context:CallbackContext):
     next_thursday = next_weekday(d, 3) # 0 = Monday, 1=Tuesday, 2=Wednesday...
     tommorw_date=next_thursday.strftime("%d/%m/%y")
     url = "https://api.mindee.net/v1/products/GreenArmy/screenshot/v1/predict"
-    if file_path is not None:        
-        response = requests.get(file_path)
-        img = Image.open(BytesIO(response.content))
-        image_file = BytesIO()
-        img.save(image_file, format='JPEG')
-        image_file.seek(0)  # important, set pointer to beginning after writing image
-        files = {"document": image_file}
-        headers = {"Authorization": "Token e2f347943462442cc768bd8ab9607149"}
-        response = requests.post(url, files=files, headers=headers)
-        response=response.json()
-        print(response)
-        print(response["document"]['inference']['pages'][0]['prediction']["sunday_date"]["values"][0]["content"])        
+    if file_path is not None:
+        if data['IsErroredOnProcessing']==False:
+            size=len(data['ParsedResults'][0]['TextOverlay']['Lines'])
+            for x in range(size):
+                #if data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['WordText']==today:
+                if data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['WordText']=='02':
+                    l,t= data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['Left'], data['ParsedResults'][0]['TextOverlay']['Lines'][x]['Words'][0]['Top']
+            print(l,t)
 
-        #total_hours_end, total_minutes_end, hours,minutes=calculate(message.splitlines())
-           
-        #m.edit_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
+            response = requests.get(file_path)
+            img = Image.open(BytesIO(response.content))
+            pixels = np.array(img)          
+            img = Image.fromarray(pixels)
             
-        #else:
-        #    m.edit_text(text="⚠️Something went wrong, please try again later ⚠️")
+            left = 136
+            top = t-210 
+            right = 440
+            bottom = t+40
+
+            img1 = img.crop((left, top, right, bottom))
+            
+            image_file = BytesIO()
+            img1.save(image_file, format='JPEG')
+            image_file.seek(0)  # important, set pointer to beginning after writing image
+
+            nm=update.message.reply_photo(photo=image_file, quote=True)
+            file_id = update.message.photo[-1].file_id
+            print(nm.effective_attachment[-1].get_file().file_path,'new image path')
+            
+            file_path=nm.effective_attachment[-1].get_file().file_path
+            data=requests.get(f"https://api.ocr.space/parse/imageurl?apikey={API_KEY}&url={file_path}&language=eng&detectOrientation=True&filetype=JPG&OCREngine=1&isTable=True&scale=True")
+            nm.delete()
+            data=data.json()
+            print(data,'new image ocr data')
+            
+            message=data['ParsedResults'][0]['ParsedText']
+            print(message,'the text from the new image')
+            print(message.splitlines(),'split')
+            total_hours_end, total_minutes_end, hours,minutes=calculate(message.splitlines())
+           
+            m.edit_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')   
+        else:
+            m.edit_text(text="⚠️Something went wrong, please try again later ⚠️")
     else:
         m.edit_text("Something went wrong, Send this image again")
 
@@ -68,12 +92,13 @@ def calculate(data_list):
 
     for x in range(1,5):
         str1 = ''.join(str(e) for e in data_list[x-1])
+        print(str1,'str1')
 
         pos_flags=[i for i, letter in enumerate(str1) if letter == ':']
-
+        print(pos_flags,'pos_flags')
         for i in range (2):
             hours.append((str1[pos_flags[i]-2:pos_flags[i]+3]).split(" "))
-
+        print(hours,'hours')
     from datetime import datetime
 
     for x in range(1,5):
