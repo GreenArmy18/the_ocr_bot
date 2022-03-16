@@ -37,6 +37,7 @@ def extract_image(update:Update,context:CallbackContext):
     next_thursday = next_weekday(d, 3) # 0 = Monday, 1=Tuesday, 2=Wednesday...
     tommorw_date=next_thursday.strftime("%d/%m/%y")
     url = "https://api.mindee.net/v1/products/GreenArmy/screenshot/v1/predict"
+    hours=[]
 
     if file_path is not None:
         response = requests.get(file_path)
