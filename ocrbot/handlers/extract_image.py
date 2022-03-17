@@ -84,8 +84,7 @@ def extract_image(update:Update,context:CallbackContext):
     flag=False
 
     if file_path is not None:
-        while flag==False:
-                    response = requests.get(file_path)
+        response = requests.get(file_path)
         img = Image.open(BytesIO(response.content))
         image_file = BytesIO()
         img.save(image_file, format='JPEG')
@@ -94,6 +93,7 @@ def extract_image(update:Update,context:CallbackContext):
         headers = {"Authorization": "Token e2f347943462442cc768bd8ab9607149"}
         response = requests.post(url, files=files, headers=headers)
         response=response.json()
+        print(response,'response')
         size=len(response["document"]['inference']['pages'][0]['prediction']["wednesday_date"]["values"])
         print(size,'size')
         hours=[]
@@ -124,7 +124,6 @@ def extract_image(update:Update,context:CallbackContext):
 
         print(hours,'hours')
         if len(hours)==8:
-            flag=True
             total_hours_end, total_minutes_end, hours,minutes=calculate(hours)
                 
             m.edit_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
