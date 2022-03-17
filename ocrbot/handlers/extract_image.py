@@ -30,7 +30,7 @@ def calculate(data_list):
     t2=timedelta(hours=1, milliseconds=0)
     total_time=t1-t2
 
-    for x in range():
+    for x in range(len(start_hour)):
         first_time=re.sub('[^0-9]', '', str(start_hour[x]))
         second_time=re.sub('[^0-9]', '', str(end_hour[x]))
         
