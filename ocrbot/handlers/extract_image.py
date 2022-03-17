@@ -30,7 +30,7 @@ def calculate(data_list):
     t2=timedelta(hours=1, milliseconds=0)
     total_time=t1-t2
 
-    for x in range(4):
+    for x in range():
         first_time=re.sub('[^0-9]', '', str(start_hour[x]))
         second_time=re.sub('[^0-9]', '', str(end_hour[x]))
         
@@ -81,9 +81,11 @@ def extract_image(update:Update,context:CallbackContext):
     tommorw_date=next_thursday.strftime("%d/%m/%y")
     url = "https://api.mindee.net/v1/products/GreenArmy/screenshot/v1/predict"
     hours=[]
+    flag=False
 
     if file_path is not None:
-        response = requests.get(file_path)
+        while flag==False:
+                    response = requests.get(file_path)
         img = Image.open(BytesIO(response.content))
         image_file = BytesIO()
         img.save(image_file, format='JPEG')
@@ -105,10 +107,10 @@ def extract_image(update:Update,context:CallbackContext):
         for hour in hours_titles:
             values_size=len(response["document"]['inference']['prediction'][hour]["values"])
             print(values_size,'values_size')
-
+            
             if len(response["document"]['inference']['prediction']['wednesday_date']["values"])>1:
                     for value in range(values_size):
-                        #if response["document"]['inference']['prediction']["wednesday_date"]["values"][value]["content"]=='02':
+                        if response["document"]['inference']['prediction']["wednesday_date"]["values"][value]["content"]=='02':
                             #if response["document"]['inference']['prediction']["wednesday_date"]["values"][value]["content"]==today_date/yom_reviei:
                             if response["document"]['inference']['prediction'][hour]["values"][value]["confidence"]==1 or response["document"]['inference']['prediction'][hour]["values"][value]["confidence"]==1.0 or response["document"]['inference']['prediction'][hour]["values"][value]["confidence"]==0.99:
                                     hours.append(response["document"]['inference']['prediction'][hour]["values"][value]["content"])
@@ -120,10 +122,11 @@ def extract_image(update:Update,context:CallbackContext):
                             
 
         print(hours,'hours')
-            
-        total_hours_end, total_minutes_end, hours,minutes=calculate(hours)
-            
-        m.edit_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
+        if len(hours)==8:
+            flag=True
+            total_hours_end, total_minutes_end, hours,minutes=calculate(hours)
+                
+            m.edit_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
             
     else:
         m.edit_text(text="⚠️Something went wrong, please try again later ⚠️")
