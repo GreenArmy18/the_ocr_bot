@@ -98,6 +98,7 @@ def extract_image(update:Update,context:CallbackContext):
         print(size,'size')
         hours=[]
         confidence=[]
+        con_result=[]
         hours_titles=['sunday_start_time','sunday_end_time','monday_start_time','monday_end_time','tuesday_start_time','tuesday_end_time','wednesday_start_time','wednesday_end_time']
         start_hour_titles=['sunday_start_time','monday_start_time','tuesday_start_time','wednesday_start_time']
         end_hour_titles=['sunday_end_time','monday_end_time','tuesday_end_time','wednesday_end_time']
@@ -118,7 +119,10 @@ def extract_image(update:Update,context:CallbackContext):
                             else:
                                 for value in range(values_size):
                                     confidence.append(response["document"]['inference']['prediction'][hour]["values"][value]["confidence"])
-                                    hours.append(max(confidence))
+                                    con_result.append(response["document"]['inference']['prediction'][hour]["values"][value]["content"])
+                                print(confidence,'confidence')
+                                print(con_result,'con_result')
+                                hours.append(con_result[confidence.index(max(confidence))])
 
             else:
                 for value in range(values_size):
