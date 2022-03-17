@@ -97,7 +97,7 @@ def extract_image(update:Update,context:CallbackContext):
         size=len(response["document"]['inference']['pages'][0]['prediction']["wednesday_date"]["values"])
         print(size,'size')
         hours=[]
-
+        confidence=[]
         hours_titles=['sunday_start_time','sunday_end_time','monday_start_time','monday_end_time','tuesday_start_time','tuesday_end_time','wednesday_start_time','wednesday_end_time']
         start_hour_titles=['sunday_start_time','monday_start_time','tuesday_start_time','wednesday_start_time']
         end_hour_titles=['sunday_end_time','monday_end_time','tuesday_end_time','wednesday_end_time']
@@ -115,6 +115,11 @@ def extract_image(update:Update,context:CallbackContext):
                             if response["document"]['inference']['prediction'][hour]["values"][value]["confidence"]==1 or response["document"]['inference']['prediction'][hour]["values"][value]["confidence"]==1.0 or response["document"]['inference']['prediction'][hour]["values"][value]["confidence"]==0.99:
                                     hours.append(response["document"]['inference']['prediction'][hour]["values"][value]["content"])
                                     print(response["document"]['inference']['prediction'][hour]["values"][value]["content"])
+                            else:
+                                for value in range(values_size):
+                                    confidence.append(response["document"]['inference']['prediction'][hour]["values"][value]["confidence"])
+                                    hours.append(max(confidence))
+
             else:
                 for value in range(values_size):
                     #if response["document"]['inference']['prediction']["wednesday_date"]["values"][value]["content"]==today_date/yom_reviei:
