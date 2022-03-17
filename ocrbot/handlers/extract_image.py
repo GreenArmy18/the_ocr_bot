@@ -30,7 +30,7 @@ def calculate(data_list):
     t2=timedelta(hours=1, milliseconds=0)
     total_time=t1-t2
 
-    for x in range(len(start_hour)):
+    for x in range(4):
         first_time=re.sub('[^0-9]', '', str(start_hour[x]))
         second_time=re.sub('[^0-9]', '', str(end_hour[x]))
         
@@ -81,7 +81,6 @@ def extract_image(update:Update,context:CallbackContext):
     tommorw_date=next_thursday.strftime("%d/%m/%y")
     url = "https://api.mindee.net/v1/products/GreenArmy/screenshot/v1/predict"
     hours=[]
-    flag=False
 
     if file_path is not None:
         response = requests.get(file_path)
@@ -93,12 +92,10 @@ def extract_image(update:Update,context:CallbackContext):
         headers = {"Authorization": "Token e2f347943462442cc768bd8ab9607149"}
         response = requests.post(url, files=files, headers=headers)
         response=response.json()
-        print(response,'response')
         size=len(response["document"]['inference']['pages'][0]['prediction']["wednesday_date"]["values"])
         print(size,'size')
         hours=[]
-        confidence=[]
-        con_result=[]
+
         hours_titles=['sunday_start_time','sunday_end_time','monday_start_time','monday_end_time','tuesday_start_time','tuesday_end_time','wednesday_start_time','wednesday_end_time']
         start_hour_titles=['sunday_start_time','monday_start_time','tuesday_start_time','wednesday_start_time']
         end_hour_titles=['sunday_end_time','monday_end_time','tuesday_end_time','wednesday_end_time']
@@ -115,15 +112,6 @@ def extract_image(update:Update,context:CallbackContext):
                             #if response["document"]['inference']['prediction']["wednesday_date"]["values"][value]["content"]==today_date/yom_reviei:
                             if response["document"]['inference']['prediction'][hour]["values"][value]["confidence"]==1 or response["document"]['inference']['prediction'][hour]["values"][value]["confidence"]==1.0 or response["document"]['inference']['prediction'][hour]["values"][value]["confidence"]==0.99:
                                     hours.append(response["document"]['inference']['prediction'][hour]["values"][value]["content"])
-                                    print(response["document"]['inference']['prediction'][hour]["values"][value]["content"])
-                            else:
-                                for value in range(values_size):
-                                    confidence.append(response["document"]['inference']['prediction'][hour]["values"][value]["confidence"])
-                                    con_result.append(response["document"]['inference']['prediction'][hour]["values"][value]["content"])
-                                print(confidence,'confidence')
-                                print(con_result,'con_result')
-                                hours.append(con_result[confidence.index(max(confidence))])
-
             else:
                 for value in range(values_size):
                     #if response["document"]['inference']['prediction']["wednesday_date"]["values"][value]["content"]==today_date/yom_reviei:
@@ -132,10 +120,10 @@ def extract_image(update:Update,context:CallbackContext):
                             
 
         print(hours,'hours')
-        if len(hours)==8:
-            total_hours_end, total_minutes_end, hours,minutes=calculate(hours)
-                
-            m.edit_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
+            
+        total_hours_end, total_minutes_end, hours,minutes=calculate(hours)
+            
+        m.edit_text(text='שבוע טוב, אימא\n''השבוע עבדת '+total_hours_end+' שעות ו־'+total_minutes_end+' דקות.\n''ביום חמישי הקרוב – '+tommorw_date+', תצטרכי לעבוד ' +hours+ ' שעות ו־' +minutes+ ' דקות כדי להגיע למכסת 29 השעות השבועיות.\nשיהיה לך המשך שבוע נפלא :)')
             
     else:
         m.edit_text(text="⚠️Something went wrong, please try again later ⚠️")
