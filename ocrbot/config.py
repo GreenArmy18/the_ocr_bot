@@ -1,7 +1,3 @@
-import os
-import dotenv
-
-#dotenv.load_dotenv()
 #8adf27cb6488957
 #K82520867588957
 API_KEY = "8adf27cb6488957"
